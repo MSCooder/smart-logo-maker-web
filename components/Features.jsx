@@ -19,7 +19,6 @@ const Features = () => {
     <section id="features" className="py-24 bg-white overflow-hidden">
       <div className="max-w-7xl mx-auto px-6">
 
-
         <div className="text-center mb-20 ">
           <motion.span
             initial={{ opacity: 0 }}
