@@ -12,10 +12,10 @@ export default async function Signup({ searchParams }: Props) {
   const message = params?.message;
 
   return (
-    <div className="min-h-screen flex flex-col md:flex-row items-center justify-center bg-gradient-to-br from-[#fdfbfb] via-[#f6f7fb] to-[#eef2ff] px-4 md:px-12">
+    <div className="min-h-screen flex flex-col md:flex-row items-center justify-center bg-linear-to-br from-[#fdfbfb] via-[#f6f7fb] to-[#eef2ff] px-4 md:px-12">
 
       {/* RIGHT SIDE (ILLUSTRATION) */}
-      <div className="hidden md:flex flex-1 relative justify-center items-center h-[500px]">
+      <div className="hidden md:flex flex-1 relative justify-center items-center h-125">
 
         <div className="absolute w-96 h-96 bg-purple-400/50 rounded-full blur-3xl -top-16 -right-16 animate-pulse"></div>
         <div className="absolute w-72 h-72 bg-pink-400/40 rounded-full blur-2xl -bottom-16 -left-12 animate-pulse"></div>
@@ -110,7 +110,7 @@ export default async function Signup({ searchParams }: Props) {
 
           <button
             type="submit"
-            className="w-full mt-3 h-9 rounded-xl text-sm font-semibold text-white bg-gradient-to-r from-orange-500 to-pink-500 hover:opacity-90 transition shadow-md"
+            className="w-full mt-3 h-9 rounded-xl text-sm font-semibold text-white bg-linear-to-r from-orange-500 to-pink-500 hover:opacity-90 transition shadow-md"
           >
             Create Account
           </button>

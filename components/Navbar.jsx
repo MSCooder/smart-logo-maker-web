@@ -50,7 +50,7 @@ const Navbar = () => {
 
             {/* Gradient Get Started Button */}
             <button className="bg-linear-to-r from-[#FF5C00] via-[#FF007A] to-[#C400FF] text-white px-8 py-3 rounded-full font-bold text-[15px] shadow-[0_4px_15px_rgba(255,0,122,0.3)] hover:scale-105 transition-transform duration-200">
-              Get Started
+               <Link href="/auth/signin" className='font-bold text-lg'>Login</Link>
             </button>
           </div>
 
@@ -92,9 +92,11 @@ const Navbar = () => {
               {link.name}
             </Link>
           ))}
-          <button className="w-full bg-linear-to-r from-[#FF5C00] to-[#C400FF] text-white py-2 rounded-4xl font-bold text-lg">
-          Get Started
+          
+          <button className="w-full bg-linear-to-r from-[#FF5C00] to-[#C400FF] text-white py-2 rounded-4xl ">
+          <Link href="/auth/signin" className='font-bold text-lg'>Login</Link>
           </button>
+    
         </div>
       </div>
     </nav >

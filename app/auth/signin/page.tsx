@@ -12,7 +12,7 @@ export default async function Login({ searchParams }: Props) {
   const message = params?.message;
 
   return (
-    <div className="min-h-screen flex flex-col md:flex-row items-center justify-center bg-gradient-to-br from-[#fdfbfb] via-[#f6f7fb] to-[#eef2ff] px-4 md:px-12 overflow-hidden">
+    <div className="min-h-screen flex flex-col md:flex-row items-center justify-center bg-linear-to-br from-[#fdfbfb] via-[#f6f7fb] to-[#eef2ff] px-4 md:px-12 overflow-hidden">
 
       {/* LEFT - LOGIN FORM */}
       <div className="w-full max-w-md bg-white/90 backdrop-blur-xl rounded-3xl shadow-lg px-8 py-8 md:mr-8 z-10">
@@ -84,7 +84,7 @@ export default async function Login({ searchParams }: Props) {
 
           <button
             type="submit"
-            className="w-full h-10 rounded-xl text-sm font-semibold text-white bg-gradient-to-r from-orange-500 to-pink-500 hover:opacity-90 transition shadow-md"
+            className="w-full h-10 rounded-xl text-sm font-semibold text-white bg-linear-to-r from-orange-500 to-pink-500 hover:opacity-90 transition shadow-md"
           >
             Login
           </button>
@@ -115,7 +115,7 @@ export default async function Login({ searchParams }: Props) {
       </div>
 
       {/* RIGHT - ATTRACTIVE ILLUSTRATION */}
-      <div className="hidden md:flex flex-1 relative justify-center items-center w-full h-[500px] md:h-[600px]">
+      <div className="hidden md:flex flex-1 relative justify-center items-center w-full h-125 md:h-150">
 
         {/* BACKGROUND SHAPES */}
         <div className="absolute w-96 h-96 bg-purple-400/50 rounded-full blur-3xl -top-16 -right-16 animate-pulse"></div>
@@ -123,7 +123,7 @@ export default async function Login({ searchParams }: Props) {
         <div className="absolute w-80 h-80 bg-blue-400/30 rounded-full blur-2xl -bottom-10 right-10 animate-pulse"></div>
 
         {/* MAIN ROBOT IMAGE */}
-        <div className="absolute top-0 left-30 w-[780px] h-[780px] pointer-events-none">
+        <div className="absolute top-0 left-30 w-195 h-195 pointer-events-none">
           <Image
             src="/light.svg"
             alt="light"
