@@ -15,7 +15,6 @@ const geistMono = Geist_Mono({
 
 export const metadata = {
   title: "Smart Logo Maker",
-  favicon: 'logo1.ico',
 };
 
 export default function RootLayout({ children }) {

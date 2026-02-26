@@ -93,7 +93,7 @@ const Navbar = () => {
             </Link>
           ))}
           <button className="w-full bg-linear-to-r from-[#FF5C00] to-[#C400FF] text-white py-2 rounded-4xl font-bold text-lg">
-            Get Started
+          Login
           </button>
         </div>
       </div>
