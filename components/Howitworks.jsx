@@ -31,6 +31,14 @@ const HowItWorks = () => {
         
         {/* Header Section */}
         <div className="text-center mb-24">
+          <motion.span
+            initial={{ opacity: 0 }}
+            whileInView={{ opacity: 1 }}
+            viewport={{ once: true }}
+            className="inline-block px-4 py-1.5 rounded-full text-[15px] font-bold tracking-[0.2em] uppercase bg-orange-300 border border-pink-100 mb-6 text-bold bg-linear-to-r from-[#ff5c01] via-[#ff007a] to-[#c400ff] bg-clip-text text-transparent"
+          >
+            SIMPLE PROCESS
+          </motion.span>
           <motion.h2 
             initial={{ opacity: 0, y: 20 }}
             whileInView={{ opacity: 1, y: 0 }}

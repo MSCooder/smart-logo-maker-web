@@ -27,40 +27,17 @@ const Hero = () => {
     <section className="relative min-h-screen flex items-center justify-center overflow-hidden bg-white pt-20">
 
       {/* 1. BACKGROUND IMAGE */}
-  <div className="absolute inset-0 z-0 pointer-events-none overflow-hidden select-none">
-  <img
-    src="/logo1.svg"
-    alt="background-decoration"
-    className="
-      absolute
-      /* Position: Right corner se thoda bahar nikalta hua */
-      -right-[5%] -bottom-[10%]
-      md:-right-[10%] md:-bottom-[15%]
-      
-      /* Size: Responsive scaling */
-      w-[300px] 
-      sm:w-[450px] 
-      md:w-[600px] 
-      lg:w-[800px]
-      
-      /* Tilted Look: 15 to 45 degree rotate karein */
-      rotate-[25deg] 
-      md:rotate-[15deg]
-      
-      /* Visibility: Background mein mix karne ke liye */
-      opacity-10 
-      md:opacity-15
-      
-      /* Smoothness */
-      transition-all duration-700 ease-in-out
-      object-contain
-      blur-[2px] /* Optional: Thoda depth dene ke liye */
+      <div className="absolute inset-0 z-0 pointer-events-none overflow-hidden select-none">
+        <img
+          src="/logo1.svg"
+          alt="background-decoration"
+          className="ml-200 -right-[5%] -bottom-[10%] md:-right-[10%] md:-bottom-[15%] w-75  sm:w-112.5  md:w-150  lg:w-200 rotate-25  md:rotate-15 opacity-10  md:opacity-15 transition-all duration-700 ease-in-out object-contain blur-[2px] 
     "
-    onError={(e) => console.log("Check if /logo1.svg exists in public folder")}
-  />
-</div>
+          onError={(e) => console.log("Check if /logo1.svg exists in public folder")}
+        />
+      </div>
 
-      {/* 2. ANIMATED DOTS - Sirf ye client par render honge */}
+      {/* 2. ANIMATED DOTS */}
       <div className="absolute inset-0 z-0 pointer-events-none">
         {mounted && dotsData.map((dot) => (
           <motion.div
