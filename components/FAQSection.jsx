@@ -26,7 +26,6 @@ const FAQSection = () => {
     setActiveIndex(activeIndex === index ? null : index);
   };
 
-  // Animation Variants
   const containerVariants = {
     hidden: { opacity: 0 },
     visible: {
@@ -50,11 +49,12 @@ const FAQSection = () => {
   };
 
   return (
-    <section className="min-h-screen bg-[#f8faff] py-20 px-6 flex flex-col items-center">
+    // FIX: py-12 ko responsive banaya (py-8 md:py-12) aur min-h-screen ko maintain rakha
+    <section className="min-h-screen bg-[#f8faff] py-8 md:py-12 px-6 flex flex-col items-center md:-mb-20 sm:-mb-20">
       
-      {/* Header Section with Animation */}
+      {/* Header Section */}
       <motion.div 
-        className="text-center mb-12"
+        className="text-center mb-10 md:mb-12" // Margin kam kiya choti screens k liye
         initial={{ opacity: 0, y: -20 }}
         whileInView={{ opacity: 1, y: 0 }}
         viewport={{ once: true }}
@@ -68,7 +68,7 @@ const FAQSection = () => {
         </p>
       </motion.div>
 
-      {/* FAQ List with Scroll and Stagger Animation */}
+      {/* FAQ List */}
       <motion.div 
         className="w-full max-w-3xl space-y-5"
         variants={containerVariants}
@@ -85,15 +85,15 @@ const FAQSection = () => {
               variants={itemVariants}
               className={`bg-white rounded-2xl border transition-all duration-300 ${
                 isOpen ? 'border-blue-200 shadow-xl shadow-blue-500/5' : 'border-gray-100 shadow-sm'
-              } overflow-hidden`}
+              }`}
             >
               <button
                 onClick={() => toggleFAQ(index)}
-                className="w-full flex items-center justify-between p-6 text-left focus:outline-none"
+                className="w-full flex items-center justify-between p-5 md:p-6 text-left focus:outline-none" // Padding adjust
               >
-                {/* Gradient Text Logic */}
+                {/* Question Text */}
                 <motion.span 
-                  className={`text-lg font-bold ${
+                  className={`text-base md:text-lg font-bold ${
                     isOpen 
                     ? 'bg-linear-to-r from-blue-600 via-purple-600 to-pink-500 bg-clip-text text-transparent' 
                     : 'text-gray-800'
@@ -104,6 +104,7 @@ const FAQSection = () => {
                   Q. {faq.question}
                 </motion.span>
 
+                {/* Icon */}
                 <motion.div 
                   className={`ml-4 shrink-0 p-2 rounded-full transition-colors duration-300 ${
                     isOpen ? 'bg-blue-50' : 'bg-gray-50'
@@ -119,7 +120,7 @@ const FAQSection = () => {
                 </motion.div>
               </button>
 
-              {/* Expandable Content with Smooth Animation */}
+              {/* Answer Content */}
               <AnimatePresence initial={false}>
                 {isOpen && (
                   <motion.div
@@ -127,10 +128,10 @@ const FAQSection = () => {
                     initial={{ height: 0, opacity: 0 }}
                     animate={{ height: "auto", opacity: 1 }}
                     exit={{ height: 0, opacity: 0 }}
-                    transition={{ duration: 0.3, ease: "easeInOut" }}
+                    transition={{ duration: 0.4, ease: [0.04, 0.62, 0.23, 0.98] }}
                     className="overflow-hidden"
                   >
-                    <div className="px-6 pb-6 text-gray-500 leading-relaxed border-t border-gray-50 pt-5 text-sm md:text-base">
+                    <div className="px-5 md:px-6 pb-6 text-gray-500 leading-relaxed border-t border-gray-50 pt-5 text-sm md:text-base">
                       {faq.answer}
                     </div>
                   </motion.div>

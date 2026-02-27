@@ -2,7 +2,7 @@
 
 import React from 'react';
 import { Mail, MessageCircle, MapPin } from 'lucide-react';
-import { motion } from 'framer-motion'; // 1. Import motion
+import { motion } from 'framer-motion';
 
 export default function ContactForm() {
 
@@ -12,7 +12,7 @@ export default function ContactForm() {
     visible: {
       opacity: 1,
       transition: {
-        staggerChildren: 0.2, // Ek ke baad ek animation aayegi
+        staggerChildren: 0.2, 
       },
     },
   };
@@ -33,7 +33,8 @@ export default function ContactForm() {
     <div className="min-h-screen bg-[#F8F9FD] font-sans text-slate-900 overflow-hidden">
 
       {/* --- HERO / CONTACT FORM SECTION --- */}
-      <section className="relative pt-32 pb-32 px-6 bg-linear-to-br from-purple-50 via-white to-blue-50">
+      {/* Reduced pb-32 to pb-20 for better spacing on medium devices */}
+      <section className="relative pt-32 pb-20 px-6 bg-linear-to-br from-purple-50 via-white to-blue-50">
         <div className="max-w-6xl mx-auto">
           
           {/* Animated Heading */}
@@ -51,7 +52,7 @@ export default function ContactForm() {
             variants={containerVariants}
             initial="hidden"
             whileInView="visible"
-            viewport={{ once: true, amount: 0.2 }} // Scroll krne pr trigger hoga
+            viewport={{ once: true, amount: 0.2 }}
           >
 
             {/* Left: Form Card with Animation */}
