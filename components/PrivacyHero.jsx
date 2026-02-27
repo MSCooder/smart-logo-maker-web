@@ -4,7 +4,7 @@ const PrivacyPolicy = () => {
   return (
     <div className="min-h-screen bg-white text-gray-900 scroll-smooth">
       {/* Hero Section */}
-      <section className="bg-gradient-to-r from-pink-100 via-purple-50 to-blue-50 py-20 px-4 text-center">
+      <section className="bg-linear-to-r from-pink-100 via-purple-50 to-blue-50 py-20 px-4 text-center">
         <h1 className="text-5xl font-extrabold text-gray-900 mb-4 tracking-tight">
           Privacy Policy
         </h1>
