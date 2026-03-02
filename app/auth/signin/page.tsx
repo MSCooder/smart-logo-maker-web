@@ -94,6 +94,8 @@ export default function Login() {
               transition-colors duration-200
               hover:border-pink-500 hover:bg-gray-50
               focus:outline-none focus:ring-2 focus:ring-pink-500"
+
+              
             />
           </div>
 
@@ -129,7 +131,7 @@ export default function Login() {
           <Link href="/auth/signup" className="text-pink-600 font-semibold hover:underline">
             Sign up
           </Link>
-          
+
         </p>
       </div>
 

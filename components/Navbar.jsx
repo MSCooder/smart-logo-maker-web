@@ -50,9 +50,14 @@ const Navbar = () => {
 
             {/* Gradient Get Started Button */}
             <button className="bg-linear-to-r from-[#FF5C00] via-[#FF007A] to-[#C400FF] text-white px-8 py-3 rounded-full font-bold text-[15px] shadow-[0_4px_15px_rgba(255,0,122,0.3)] hover:scale-105 transition-transform duration-200">
-               <Link href="/auth/signin" className='font-bold text-lg'>Login</Link>
+              <Link href="/auth/signin" className='font-bold text-lg'>Login</Link>
             </button>
+            <button className="bg-linear-to-r from-[#FF5C00] via-[#FF007A] to-[#C400FF] text-white px-8 py-3 rounded-full font-bold text-[15px] shadow-[0_4px_15px_rgba(255,0,122,0.3)] hover:scale-105 transition-transform duration-200">
+              <Link href="/auth/signup" className='font-bold text-lg'>Signup</Link>
+            </button>
+
           </div>
+
 
           {/* Hamburger Button (Mobile < 770px) */}
           <div className="md:hidden">
@@ -92,11 +97,11 @@ const Navbar = () => {
               {link.name}
             </Link>
           ))}
-          
+
           <button className="w-full bg-linear-to-r from-[#FF5C00] to-[#C400FF] text-white py-2 rounded-4xl ">
-          <Link href="/auth/signin" className='font-bold text-lg'>Login</Link>
+            <Link href="/auth/signin" className='font-bold text-lg'>Login</Link>
           </button>
-    
+
         </div>
       </div>
     </nav >
