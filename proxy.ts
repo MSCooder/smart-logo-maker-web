@@ -41,10 +41,10 @@ export async function proxy(request: NextRequest) {
     const isAuthRoute = pathname.startsWith("/auth");
     const isCallback = pathname.startsWith("/auth/callback");
 
-    // If the user is not logged in and trying to access a protected route
+    // --- CHANGE IS HERE ---
+    // Humne protectedPrefixes se "/editor" ko hata diya hai
     if (!user && !isAuthRoute) {
-        // Redirect only truly protected routes — add more as the app grows
-        const protectedPrefixes = ["/dashboard", "/editor", "/account"];
+        const protectedPrefixes = ["/dashboard", "/account"]; 
         const isProtected = protectedPrefixes.some((p) => pathname.startsWith(p));
 
         if (isProtected) {
@@ -54,7 +54,7 @@ export async function proxy(request: NextRequest) {
         }
     }
 
-    // If the user IS logged in, redirect away from auth pages (except callback)
+    // If the user IS logged in, redirect away from auth pages
     if (user && isAuthRoute && !isCallback) {
         const url = request.nextUrl.clone();
         url.pathname = "/";
@@ -66,13 +66,6 @@ export async function proxy(request: NextRequest) {
 
 export const config = {
     matcher: [
-        /*
-         * Match all request paths except:
-         * - _next/static (static files)
-         * - _next/image (image optimization files)
-         * - favicon.ico
-         * - public files (svg, png, jpg, etc.)
-         */
         "/((?!_next/static|_next/image|favicon.ico|.*\\.(?:svg|png|jpg|jpeg|gif|webp)$).*)",
     ],
 };

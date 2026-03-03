@@ -1,66 +1,135 @@
 "use client";
-import Link from 'next/link';
-import { useState } from 'react';
+import { useState, useEffect } from 'react';
 import Image from 'next/image';
 import { useRouter } from 'next/navigation';
-import { motion, AnimatePresence } from 'framer-motion'; // Smooth animation ke liye
-import { ChevronLeft, Edit3, Download, Bookmark, X } from 'lucide-react'; // Icons
-
-const logoDesigns = [
-  { id: 1, name: 'Design 1', src: '/photo1.jfif' },
-  { id: 2, name: 'Design 2', src: '/photo2.jfif' },
-  { id: 3, name: 'Design 3', src: '/photo3.jfif' },
-  { id: 4, name: 'Design 4', src: '/photo4.jfif' },
-  { id: 5, name: 'Design 5', src: '/photo5.jfif' },
-  { id: 6, name: 'Design 6', src: '/photo6.jfif' },
-];
+import { motion, AnimatePresence } from 'framer-motion';
+import { ChevronLeft, Edit3, Bookmark, X, Loader2, ShoppingCart } from 'lucide-react';
 
 const ResultsPage = () => {
   const router = useRouter();
   const [selectedDesign, setSelectedDesign] = useState(null);
+  const [logos, setLogos] = useState([]);
+  const [loading, setLoading] = useState(true);
+
+  useEffect(() => {
+    const fetchLogos = async () => {
+      try {
+        const response = await fetch('https://www.logoai.com/api/getAllInfo', {
+          method: 'POST',
+          headers: { 'Content-Type': 'application/json' },
+          body: JSON.stringify({
+            name: "ARHAM", 
+            industry: 23,
+            color: "1",
+            font: "1",
+            p: 2,
+            dataPage: 0,
+            select: "55540,55014,54795,54792,54558,54559,54553" 
+          }),
+        });
+
+        const result = await response.json();
+        
+        if (result && result.templates) {
+          // Sirf pehle 6 designs uthane ke liye slice use kiya hai
+          const formattedLogos = result.templates.slice(0, 6).map((tpl, index) => ({
+            id: tpl.id || index,
+            name: `Design ${index + 1}`,
+            src: tpl.image_url || '/image1.jpg', 
+            initials: "ARHAM",
+            themeColor: tpl.color || '#8b5e3c'
+          }));
+          setLogos(formattedLogos);
+        } else {
+          setLogos([
+            { id: 1, name: 'Design 1', src: '/photo6.jfif', initials: 'ARHAM', themeColor: '#8b5e3c' },
+            { id: 2, name: 'Design 2', src: '/photo1.jfif', initials: 'ARHAM', themeColor: '#00a884' },
+            { id: 4, name: 'Design 4', src: '/photo3.jfif', initials: 'ARHAM', themeColor: '#2c3e50' },
+            { id: 3, name: 'Design 3', src: '/photo2.jfif', initials: 'ARHAM', themeColor: '#d91e18' },
+            { id: 6, name: 'Design 6', src: '/photo5.jfif', initials: 'ARHAM', themeColor: '#8e44ad' },
+            { id: 5, name: 'Design 5', src: '/photo4.jfif', initials: 'ARHAM', themeColor: '#f39c12' },
+          ]);
+        }
+      } catch (error) {
+        console.error("API Error:", error);
+      } finally {
+        setLoading(false);
+      }
+    };
+
+    fetchLogos();
+  }, []);
 
   const handleBack = () => router.back();
 
+  const handleEditOnCanva = (design) => {
+    const params = new URLSearchParams({
+      img: design.src,
+      text: design.initials,
+      color: design.themeColor,
+      name: design.name
+    });
+    router.push(`/editor?${params.toString()}`);
+  };
+
+  if (loading) {
+    return (
+      <div className="h-screen flex flex-col items-center justify-center bg-pink-50">
+        <Loader2 className="animate-spin text-pink-600 mb-4" size={48} />
+        <p className="text-slate-600 font-bold">Generating your brand designs...</p>
+      </div>
+    );
+  }
+
   return (
-    <div className="min-h-screen bg-pink-50 w-full pb-20">
-      <div className="max-w-6xl mx-auto p-8  -m-5 flex flex-col items-center">
+    <div className="min-h-screen bg-pink-50 w-full pb-20 -mt-8">
+      <div className="max-w-6xl mx-auto p-8 flex flex-col items-center">
         
-        {/* Top Header Section */}
+        {/* Header */}
         <div className="w-full flex justify-between items-center mb-12">
           <div className="flex flex-col">
             <h1 className="text-4xl font-extrabold text-slate-900">Your Logo Designs</h1>
-            <p className="text-slate-600 mt-1">Click on any design to preview, edit, or save</p>
+            <p className="text-slate-600 mt-1">Premium logo styles for your brand</p>
           </div>
-          <button 
-            onClick={handleBack}
-            className="flex items-center gap-2 bg-white text-slate-700 hover:bg-slate-50 px-6 py-2.5 rounded-xl border border-slate-200 shadow-sm transition-all"
-          >
-            <ChevronLeft size={20} />
-            Back
+          <button onClick={handleBack} className="flex items-center gap-2 bg-white px-6 py-2.5 rounded-xl border border-slate-200 shadow-sm hover:bg-slate-50 transition-all">
+            <ChevronLeft size={20} /> Back
           </button>
         </div>
 
-        {/* Designs Grid */}
+        {/* Designs Grid - 3 Columns for Desktop, total 6 items */}
         <div className="grid grid-cols-1 sm:grid-cols-2 lg:grid-cols-3 gap-8 w-full">
-          {logoDesigns.map((design) => (
+          {logos.map((design) => (
             <motion.div 
               key={design.id}
-              whileHover={{ y: -8 }} // Hover animation
-              onClick={() => setSelectedDesign(design)}
-              className="bg-white p-4 rounded-[2.5rem] shadow-md hover:shadow-xl cursor-pointer transition-shadow border border-white flex flex-col items-center"
+              whileHover={{ y: -8 }}
+              className="group bg-white p-4 rounded-[2.5rem] shadow-md relative overflow-hidden flex flex-col items-center border border-transparent hover:border-pink-200 transition-all"
             >
               <div className="w-full aspect-square relative rounded-[2rem] overflow-hidden bg-slate-50 mb-4">
-                <Image 
-                  src={design.src} 
-                  alt={design.name}
-                  fill
-                  className="object-contain p-4"
-                />
-                {/* Overlay on hover */}
-                <div className="absolute inset-0 bg-black/0 hover:bg-black/5 transition-colors flex items-center justify-center group">
-                   <span className="bg-white/90 backdrop-blur px-4 py-2 rounded-full text-sm font-bold opacity-0 group-hover:opacity-100 transition-opacity">
-                     Click to Preview
-                   </span>
+                <Image src={design.src} alt={design.name} fill className="object-contain p-4" unoptimized />
+                
+                {/* --- Hover Buttons (3 Buttons Now) --- */}
+                <div className="absolute inset-0 bg-black/20 opacity-0 group-hover:opacity-100 transition-opacity flex items-end justify-center pb-6 px-2">
+                  <div className="flex flex-row gap-2 w-full justify-center px-2">
+                    <button 
+                      onClick={() => setSelectedDesign(design)}
+                      className="flex-1 flex items-center justify-center gap-1 bg-white text-sky-500 py-2.5 rounded-full text-[10px] font-black shadow-md hover:scale-105 transition-transform whitespace-nowrap"
+                    >
+                      <Bookmark size={12} /> Preview
+                    </button>
+
+                    <button 
+                      onClick={() => handleEditOnCanva(design)}
+                      className="flex-1 flex items-center justify-center gap-1 bg-white text-emerald-500 py-2.5 rounded-full text-[10px] font-black shadow-md hover:scale-105 transition-transform whitespace-nowrap"
+                    >
+                      <Edit3 size={12} /> Edit
+                    </button>
+
+                    <button 
+                      className="flex-1 flex items-center justify-center gap-1 bg-orange-500 text-white py-2.5 rounded-full text-[10px] font-black shadow-md hover:scale-105 hover:bg-orange-600 transition-all whitespace-nowrap"
+                    >
+                      <ShoppingCart size={12} /> Buy
+                    </button>
+                  </div>
                 </div>
               </div>
               <span className="text-slate-500 font-medium pb-2">{design.name}</span>
@@ -69,63 +138,26 @@ const ResultsPage = () => {
         </div>
       </div>
 
-      {/* --- POPUP MODAL WITH FRAMER MOTION --- */}
+      {/* Preview Modal */}
       <AnimatePresence>
         {selectedDesign && (
-          <div className="fixed inset-0 z-100 flex items-center justify-center p-4">
-            {/* Backdrop Animation */}
-            <motion.div 
-              initial={{ opacity: 0 }}
-              animate={{ opacity: 1 }}
-              exit={{ opacity: 0 }}
-              onClick={() => setSelectedDesign(null)}
-              className="absolute inset-0 bg-slate-900/60 backdrop-blur-sm"
-            />
-
-            {/* Modal Content Animation */}
-            <motion.div 
-              initial={{ scale: 0.9, opacity: 0, y: 20 }}
-              animate={{ scale: 1, opacity: 1, y: 0 }}
-              exit={{ scale: 0.9, opacity: 0, y: 20 }}
-              transition={{ type: "spring", duration: 0.5 }}
-              className="bg-white rounded-[2.5rem] w-full max-w-3xl shadow-2xl relative z-10 overflow-hidden"
-            >
-              {/* Close Button */}
-              <button 
-                onClick={() => setSelectedDesign(null)}
-                className="absolute top-6 right-6 p-2 bg-slate-100 hover:bg-slate-200 rounded-full text-slate-500 transition-colors z-20"
-              >
-                <X size={20} />
-              </button>
-
-              <div className="p-8">
-                <h2 className="text-2xl font-bold text-slate-900 mb-6 px-2">Logo Preview</h2>
-                
-                {/* Main Preview Image */}
-                <div className="bg-slate-50 rounded-[2rem] p-12 flex items-center justify-center border border-slate-100 mb-8">
-                  <div className="w-72 h-72 relative">
-                    <Image 
-                      src={selectedDesign.src} 
-                      alt="Preview"
-                      fill
-                      className="object-contain"
-                    />
-                  </div>
-                </div>
-
-                {/* Footer Buttons */}
-                <div className="flex flex-col sm:flex-row gap-4">
-                  <button className="flex-1 flex items-center justify-center gap-2 py-4 rounded-2xl font-bold border-2 border-slate-200 hover:bg-slate-50 transition-all">
-                    <Edit3 size={18} /> Edit
-                  </button>
-                  <button className="flex-1 flex items-center justify-center gap-2 py-4 rounded-2xl font-bold border-2 border-slate-200 hover:bg-slate-50 transition-all">
-                    <Download size={18} /> Download
-                  </button>
-                  <button className="flex-1 flex items-center justify-center gap-2 py-4 rounded-2xl font-bold bg-linear-to-r from-orange-500 to-pink-600 text-white shadow-lg shadow-pink-200 hover:opacity-90 transition-all">
-                    <Bookmark size={18} /> Save
-                  </button>
-                </div>
-              </div>
+          <div className="fixed inset-0 z-[100] flex items-center justify-center p-4">
+            <motion.div initial={{ opacity: 0 }} animate={{ opacity: 1 }} exit={{ opacity: 0 }} onClick={() => setSelectedDesign(null)} className="absolute inset-0 bg-slate-900/60 backdrop-blur-sm" />
+            <motion.div initial={{ scale: 0.9, opacity: 0 }} animate={{ scale: 1, opacity: 1 }} exit={{ scale: 0.9, opacity: 0 }} className="bg-white rounded-[2.5rem] w-full max-w-3xl shadow-2xl relative z-10 p-8">
+               <button onClick={() => setSelectedDesign(null)} className="absolute top-6 right-6 p-2 bg-slate-100 rounded-full hover:bg-slate-200"><X size={20}/></button>
+               <h2 className="text-2xl font-bold mb-6 text-slate-800">Logo Preview</h2>
+               <div className="bg-slate-50 rounded-[2rem] p-12 flex items-center justify-center mb-8 border border-dashed border-slate-200">
+                  <Image src={selectedDesign.src} alt="Preview" width={300} height={300} className="object-contain" unoptimized />
+               </div>
+               
+               <div className="flex flex-col sm:flex-row gap-4">
+                 <button onClick={() => handleEditOnCanva(selectedDesign)} className="flex-1 py-4 rounded-2xl font-bold bg-pink-600 text-white shadow-lg hover:bg-pink-700 transition-all flex items-center justify-center gap-2">
+                   <Edit3 size={20} /> Edit Design
+                 </button>
+                 <button className="flex-1 py-4 rounded-2xl font-bold bg-orange-500 text-white shadow-lg hover:bg-orange-600 transition-all flex items-center justify-center gap-2">
+                   <ShoppingCart size={20} /> Buy Now
+                 </button>
+               </div>
             </motion.div>
           </div>
         )}

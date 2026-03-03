@@ -1,7 +1,7 @@
 'use client';
 import Link from 'next/link';
 import { useState } from 'react';
-import { useRouter } from 'next/navigation'; 
+import { useRouter } from 'next/navigation';
 import { Palette, ChevronLeft } from 'lucide-react';
 
 const palettes = [
@@ -33,17 +33,17 @@ const ColorPaletteGrid = () => {
     <div className="min-h-screen bg-pink-50 w-full">
       {/* Wrapper to center everything */}
       <div className="max-w-6xl mx-auto p-6 flex flex-col items-center">
-        
+
         {/* Top Left Back Button Section */}
         <div className="w-full flex justify-start mb-6">
-        <Link href="..\create\fonts">
-          <button
-            onClick={handleBack}
-            className="flex items-center gap-2 hover:text-slate-900 transition-colors bg-white text-black hover:bg-gray-200 rounded-md px-4 py-2 border-2"
-          >
-            <ChevronLeft size={20} />
-            Back
-          </button>
+          <Link href="..\create\fonts">
+            <button
+              onClick={handleBack}
+              className="flex items-center gap-2 hover:text-slate-900 transition-colors bg-white text-black hover:bg-gray-200 rounded-md px-4 py-2 border-2"
+            >
+              <ChevronLeft size={20} />
+              Back
+            </button>
           </Link>
         </div>
 
@@ -106,11 +106,11 @@ const ColorPaletteGrid = () => {
 
         {/* Bottom Action Section - Centered Fix */}
         <div className="flex flex-col md:flex-row items-center justify-center gap-4 w-full max-w-2xl">
-          <button 
+          <button
             onClick={handleBack}
             className="w-full md:w-1/2 py-4 rounded-xl text-lg font-semibold text-slate-700 bg-white shadow-md hover:bg-slate-100 transition-all border border-gray-100"
           >
-           <Link href="..\create\fonts">Back</Link> 
+            <Link href="..\create\fonts">Back</Link>
           </button>
 
           <button
@@ -119,8 +119,8 @@ const ColorPaletteGrid = () => {
             className={`
               w-full md:w-1/2 py-4 rounded-xl text-lg font-bold text-white
               transition-all duration-300 ease-in-out shadow-lg
-              ${selectedPalette 
-                ? 'bg-linear-to-r from-pink-500 to-orange-400 hover:opacity-90 active:scale-95' 
+              ${selectedPalette
+                ? 'bg-linear-to-r from-pink-500 to-orange-400 hover:opacity-90 active:scale-95'
                 : 'bg-slate-300 cursor-not-allowed shadow-none opacity-50'
               }
             `}
