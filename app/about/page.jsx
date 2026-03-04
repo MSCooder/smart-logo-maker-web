@@ -1,21 +1,18 @@
 import Image from "next/image";
-import AboutHero from "../../components/AboutHero";
-import OurStory from "../../components/OurStory";
-import ProblemSolution from "../../components/ProblemSolution";
-import WhyChoose from "../../components/WhyChoose";
-import NumbersSection from "../../components/NumberSection";
-import Navbar from "../../components/Navbar"
-import Footer from "../../components/Footer"
+import AboutHero from "../../components/About/AboutHero";
+import OurStory from "../../components/About/NumberSection.jsx";
+import ProblemSolution from "../../components/About/ProblemSolution.jsx";
+import WhyChoose from "../../components/About/WhyChoose.jsx";
+import NumbersSection from "../../components/About/NumberSection.jsx";
+
 export default function Contact() {
   return (
     <>
-    <Navbar/>
       <AboutHero/>
       <OurStory/>
       <ProblemSolution/>
       <WhyChoose/>
       <NumbersSection/>
-      <Footer/>
     </>
   );
 }

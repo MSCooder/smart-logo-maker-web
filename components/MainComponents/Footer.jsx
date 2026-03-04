@@ -26,9 +26,9 @@ const Footer = () => {
             <h4 className="text-white font-bold text-lg mb-6">Product</h4>
             <ul className="flex flex-col space-y-4">
               {[
-                { name: 'Features', path: '../page.jsx' },
-                { name: 'How It Works', path: 'components/Howitworks' },
-                { name: 'App Preview', path: 'components/AppPreview.jsx' },
+                { name: 'Features', path: '#features' },
+                { name: 'How It Works', path: '#how-it-works' },
+                { name: 'App Preview', path: '#app-preview' },
                 { name: 'Get Started', path: '../create/bussiness-info' }
               ].map((item) => (
                 <li key={item.name}>

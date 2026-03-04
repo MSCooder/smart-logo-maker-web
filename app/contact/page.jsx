@@ -1,18 +1,14 @@
 import Image from "next/image";
-import ContactForm from "../../components/ContactForm";
-import HowIthelps from "../../components/HowIthelps";
-import FAQSection from "../../components/FAQSection";
-import Navbar from "../../components/Navbar"
-import Footer from "../../components/Footer"
+import ContactForm from "../../components/Contact/ContactForm";
+import HowIthelps from "../../components/Contact/HowItHelps";
+import FAQSection from "../../components/Contact/FAQSection";
 
 export default function Contact() {
   return (
     <>
-        <Navbar/>
       <ContactForm/>
       <HowIthelps/>
       <FAQSection/>
-            <Footer/>
     </>
   );
 }

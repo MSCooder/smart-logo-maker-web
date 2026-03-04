@@ -1,21 +1,16 @@
 import Image from "next/image";
-import Hero from "../../components/Hero"
-import Testomonials from "../../components/Testomonials"
-import FinalCTA from "../../components/FinalCTA";
-import PrivacyHero from "../../components/PrivacyHero"
-import Navbar from "../../components/Navbar"
-import Footer from "../../components/Footer"
+import Hero from "../../components/Privacy/Hero";
+import Testomonials from "../../components/Privacy/Testomonials";
+import FinalCTA from "../../components/Privacy/FinalCTA";
+import PrivacyHero from "../../components/Privacy/PrivacyHero"
 
-export default function Contact() {
+export default function Privacy() {
     return (
         <>
-            <Navbar/>
             <Hero />
             <PrivacyHero />
             <Testomonials />
             <FinalCTA />
-                  <Footer/>
-
         </>
     );
 }

@@ -1,17 +1,12 @@
 import Image from "next/image";
-import FinalCTA from "../../components/FinalCTA";
-import Terms from "../../components/Terms"
-import Navbar from "../../components/Navbar"
-import Footer from "../../components/Footer"
+import FinalCTA from "../../components/Terms/FinalCTA";
+import Terms from "../../components/Terms/Terms"
 
 export default function Contact() {
     return (
         <>
-            <Navbar/>
             <Terms />
             <FinalCTA />
-                  <Footer/>
-
         </>
     );
 }
