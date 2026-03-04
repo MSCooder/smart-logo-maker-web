@@ -3,8 +3,8 @@ import { useState } from "react";
 import { useRouter } from "next/navigation";
 import BusinessInfo from "./steps/bussiness-info";
 import Category from "./steps/category";
-// import Fonts from "./steps/Fonts";
-// import ColorPalette from "./steps/ColorPalette";
+import Fonts from "./steps/fonts";
+import ColorPalette from "./steps/color-palette";
 
 export default function CreateLogoPage() {
   const [step, setStep] = useState(1);

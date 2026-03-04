@@ -1,12 +1,12 @@
 "use client";
 import React, { useState, Suspense, useRef, useEffect } from 'react';
-import { useSearchParams, useRouter } from 'next/navigation';
+import { useSearchParams } from 'next/navigation';
 import dynamic from 'next/dynamic';
-import { Palette, Type, LayoutGrid, Zap, Eye, Save, ShoppingCart, ChevronDown, Loader2 } from 'lucide-react';
+import { Palette, Type, LayoutGrid, Zap, Eye, Save, ShoppingCart, ChevronDown, Loader2, Menu, X } from 'lucide-react';
 
 const LogoCanvas = dynamic(() => import('../../components/Editor/Canvas'), { 
   ssr: false,
-  loading: () => <div className="w-full h-full bg-white animate-pulse rounded-3xl" />
+  loading: () => <div className="w-full h-64 bg-white animate-pulse rounded-3xl" />
 });
 
 const gradients = {
@@ -25,18 +25,30 @@ export default function EditorPage() {
 
 function EditorUI() {
   const searchParams = useSearchParams();
-  const clickedImage = searchParams.get('img') || '/photo1.jfif'; 
-  const initialText = searchParams.get('text') || 'Smart Logo Maker';
-
+  
+  // Image Loading Fix: State ko direct initialize karne ke bajaye useEffect use karein
   const [logoConfig, setLogoConfig] = useState({
-    imageUrl: clickedImage,
-    text: initialText,
+    imageUrl: '/photo1.jfif', // Default
+    text: 'Smart Logo Maker',
     bgColor: '#E0F2FE', 
     fontFamily: 'Arial',
   });
 
+  useEffect(() => {
+    const img = searchParams.get('img');
+    const txt = searchParams.get('text');
+    if (img || txt) {
+      setLogoConfig(prev => ({
+        ...prev,
+        imageUrl: img || prev.imageUrl,
+        text: txt || prev.text
+      }));
+    }
+  }, [searchParams]);
+
   const [activeDropdown, setActiveDropdown] = useState(null);
-  const [isLoading, setIsLoading] = useState(false); // API Loading State
+  const [sidebarOpen, setSidebarOpen] = useState(false);
+  const [isLoading, setIsLoading] = useState(false);
   const dropdownRef = useRef(null);
 
   const fonts = ['Arial', 'Verdana', 'Georgia', 'Courier New', 'Impact'];
@@ -55,142 +67,85 @@ function EditorUI() {
     { id: 5, label: 'Bold' }, { id: 6, label: 'Classic' },
   ];
 
-  // --- API INTEGRATION FUNCTION ---
-  const handleSaveLogo = async () => {
-    setIsLoading(true);
-    // const apiUrl = 'https://www.logoai.com/api/getAllInfo';
-
-    const requestBody = {
-      color: "1",
-      font: "1",
-      industry: 23,
-      name: logoConfig.text, // Dynamic Name
-      icon_lists: [],
-      vDesigners: [1],
-      gtoken: "",
-      data: [],
-      dataPage: 0,
-      flippedTplIds: [],
-      icon_page: 1,
-      industryIconIds: [],
-      matchedIconHash: "d41d8cd98f00b204e9800998ecf8427e",
-      matchedIconIds: [0],
-      miniopenid: "",
-      p: 2,
-      precomNum: 0,
-      predouNum: 91,
-      select: "55540,55014,54795,54792,54558,54559,54553,54484,54467,50422,52262,54460,54456,54164,53861,53470,53355,53295,53122,52507,51956,48014,48016,48017,47541,47542,47543,47431,47432,47373,47362,47353,47142,47143,47132,47133,47095,47098,47007,47009,47010,47017,46988,46975,46976,46977,46856,46857,46858,46859,46803,46766,46767,46768,46769,46770,46771,46772,46773,46774,46777,46778,46780,46781,46782,46783,46784,46785,46786,46787,46788,46789,46790,46710,46711,46712,46713,46714,46703,46704,46705,46706,29489,27402,23820,21043,18189,12555,46998,46995",
-      selecthash: "17a53c0794d9bcd3ddd8c382fccabb58",
-      selectlog: "54559,48016,47543,46772,46712,46998",
-      vDesignerTpls: null,
-      wechatMiniAppId: ""
-    };
-
-    try {
-      const response = await fetch(apiUrl, {
-        method: 'POST',
-        headers: { 'Content-Type': 'application/json' },
-        body: JSON.stringify(requestBody),
-      });
-
-      const result = await response.json();
-      console.log("API Response:", result);
-      alert("Design data sent to API! Check console for response.");
-    } catch (error) {
-      console.error("API Error:", error);
-      alert("API request failed (CORS might be blocking direct browser calls).");
-    } finally {
-      setIsLoading(false);
-    }
-  };
-
-  useEffect(() => {
-    function handleClickOutside(event) {
-      if (dropdownRef.current && !dropdownRef.current.contains(event.target)) {
-        setActiveDropdown(null);
-      }
-    }
-    document.addEventListener("mousedown", handleClickOutside);
-    return () => document.removeEventListener("mousedown", handleClickOutside);
-  }, []);
-
   return (
-    <div className="h-screen bg-[#f4f7fa] flex overflow-hidden font-sans relative">
+    <div className="fixed inset-0 bg-[#f4f7fa] flex flex-col md:flex-row overflow-hidden font-sans">
       
-      {/* 1. WATERMARK */}
-      <div className="absolute inset-0 flex items-center justify-center pointer-events-none overflow-hidden select-none z-0">
-        <h1 className="text-[10vw] font-black text-gray-200/20 uppercase rotate-[-15deg] whitespace-nowrap">
-          {logoConfig.text}
-        </h1>
+      {/* 1. MOBILE SIDEBAR - Z-INDEX FIX */}
+      <div className={`fixed inset-0 z-[200] md:hidden transition-opacity duration-300 ${sidebarOpen ? "opacity-100 visible" : "opacity-0 invisible"}`}>
+        <div className="absolute inset-0 bg-black/40 backdrop-blur-sm" onClick={() => setSidebarOpen(false)} />
+        <aside className={`absolute inset-y-0 left-0 w-72 bg-white shadow-2xl transition-transform duration-300 ${sidebarOpen ? "translate-x-0" : "-translate-x-full"}`}>
+          <div className="p-6 border-b flex justify-between items-center">
+            <span className={`font-bold text-sm ${gradients.text}`}>VARIATIONS</span>
+            <X onClick={() => setSidebarOpen(false)} className="cursor-pointer text-gray-400" size={20} />
+          </div>
+          <div className="p-4 space-y-4 overflow-y-auto h-[calc(100vh-80px)]">
+            {variations.map((v) => (
+              <div key={v.id} onClick={() => { setLogoConfig({...logoConfig, bgColor: colors[v.id % colors.length].value}); setSidebarOpen(false); }} className="border border-gray-100 rounded-xl p-3 hover:border-orange-400 transition-colors">
+                 <div className="w-full aspect-video rounded-lg flex items-center justify-center mb-2" style={{ backgroundColor: logoConfig.bgColor }}>
+                    <img src={logoConfig.imageUrl} className="w-12 h-12 object-contain" alt="preview" />
+                 </div>
+                 <p className="text-[10px] font-bold text-gray-400 uppercase tracking-tighter">{v.label}</p>
+              </div>
+            ))}
+          </div>
+        </aside>
       </div>
 
-      {/* 2. SIDEBAR */}
-      <aside className="w-80 bg-white/90 backdrop-blur-md border-r border-gray-200 flex flex-col shrink-0 z-10">
-        <div className="p-8 border-b border-gray-200">
+      {/* 2. DESKTOP SIDEBAR */}
+      <aside className="hidden md:flex w-72 bg-white border-r border-gray-100 flex-col shrink-0">
+        <div className="p-8 border-b border-gray-50">
            <h2 className={`text-xs font-black uppercase tracking-widest ${gradients.text}`}>Variations</h2>
         </div>
-        <div className="flex-1 overflow-y-auto p-4 space-y-4">
-          {variations.map((v) => (
-            <div 
-              key={v.id} 
-              onClick={() => setLogoConfig({...logoConfig, bgColor: colors[v.id % colors.length].value})}
-              className="bg-white border border-gray-100 rounded-2xl p-4 shadow-sm hover:border-blue-400 cursor-pointer transition-all group"
-            >
-               <div className="w-full aspect-video rounded-xl mb-2 flex items-center justify-center overflow-hidden" style={{ backgroundColor: logoConfig.bgColor }}>
-                  <img src={logoConfig.imageUrl} alt="preview" className="w-12 h-12 object-contain group-hover:scale-110 transition-transform" />
-               </div>
-               <div className="flex justify-between items-center">
-                 <span className="text-[10px] font-bold text-gray-400 uppercase tracking-tighter">{v.label}</span>
-                 <div className="h-1.5 w-8 bg-gray-100 rounded-full" />
-               </div>
-            </div>
-          ))}
+        <div className="flex-1 overflow-y-auto p-4 space-y-4 bg-gray-50/30">
+           {variations.map((v) => (
+             <div key={v.id} onClick={() => setLogoConfig({...logoConfig, bgColor: colors[v.id % colors.length].value})} className="bg-white border border-gray-100 rounded-2xl p-4 shadow-sm hover:border-orange-400 cursor-pointer transition-all group">
+                <div className="w-full aspect-video rounded-xl mb-2 flex items-center justify-center group-hover:scale-[1.02] transition-transform" style={{ backgroundColor: logoConfig.bgColor }}>
+                   <img src={logoConfig.imageUrl} alt="preview" className="w-14 h-14 object-contain" />
+                </div>
+                <span className="text-[10px] font-bold text-gray-400 uppercase">{v.label}</span>
+             </div>
+           ))}
         </div>
       </aside>
 
-      {/* 3. MAIN CONTENT */}
-      <main className="flex-1 flex flex-col z-10 overflow-hidden">
+      {/* 3. MAIN AREA */}
+      <main className="flex-1 flex flex-col relative h-full">
         
-        {/* TOPBAR */}
-        <div className="h-20 bg-white border-b border-gray-100 flex items-center justify-center px-8 gap-4 shrink-0 shadow-sm" ref={dropdownRef}>
-          <button className="flex items-center gap-2 px-5 py-2.5 rounded-full bg-gray-50 text-gray-600 font-bold hover:bg-gray-100 transition-all text-sm">
-            <Zap size={18} className="text-orange-500" /> Style
-          </button>
-          <button className="flex items-center gap-2 px-5 py-2.5 rounded-full bg-gray-50 text-gray-600 font-bold hover:bg-gray-100 transition-all text-sm">
-            <LayoutGrid size={18} className="text-blue-500" /> Layout
+        {/* TOPBAR - 4 BUTTONS FIXED */}
+        <div className="h-16 md:h-20 bg-white border-b border-gray-100 flex items-center justify-center px-4 md:px-8 gap-2 md:gap-3 shrink-0 overflow-x-auto no-scrollbar" ref={dropdownRef}>
+          <button onClick={() => setSidebarOpen(true)} className="md:hidden p-2 bg-gray-50 rounded-xl mr-1"><Menu size={20}/></button>
+          
+          <button className="whitespace-nowrap flex items-center gap-2 px-4 py-2.5 bg-gray-50 text-gray-600 rounded-full text-[11px] md:text-xs font-bold hover:bg-gray-100 transition-all">
+            <Zap size={14} className="text-orange-500"/> Style
           </button>
 
+          <button className="whitespace-nowrap flex items-center gap-2 px-4 py-2.5 bg-gray-50 text-gray-600 rounded-full text-[11px] md:text-xs font-bold hover:bg-gray-100 transition-all">
+            <LayoutGrid size={14} className="text-blue-500"/> Layout
+          </button>
+          
           {/* Font Dropdown */}
           <div className="relative">
-            <button 
-              onClick={() => setActiveDropdown(activeDropdown === 'font' ? null : 'font')}
-              className={`flex items-center gap-2 px-6 py-2.5 rounded-full text-white font-bold text-sm shadow-lg transition-all ${gradients.primary} ${gradients.hover}`}
-            >
-              <Type size={18} /> Font <ChevronDown size={14}/>
+            <button onClick={() => setActiveDropdown(activeDropdown === 'font' ? null : 'font')} className={`whitespace-nowrap flex items-center gap-2 px-4 py-2.5 rounded-full text-white text-[11px] md:text-xs font-bold transition-all ${gradients.primary}`}>
+              <Type size={14}/> Font <ChevronDown size={12}/>
             </button>
             {activeDropdown === 'font' && (
-              <div className="absolute top-full mt-3 left-0 w-48 bg-white rounded-2xl shadow-2xl p-2 z-50 border border-gray-100">
-                {fonts.map(f => (
-                  <button key={f} onClick={() => { setLogoConfig({...logoConfig, fontFamily: f}); setActiveDropdown(null); }} className="w-full text-left p-3 hover:bg-gray-50 rounded-xl text-sm" style={{fontFamily: f}}>{f}</button>
-                ))}
+              <div className="absolute top-full left-0 mt-2 w-48 bg-white shadow-2xl rounded-2xl z-[210] border border-gray-100 p-2 animate-in fade-in slide-in-from-top-2">
+                {fonts.map(f => <button key={f} onClick={() => {setLogoConfig({...logoConfig, fontFamily: f}); setActiveDropdown(null);}} className="w-full text-left p-2.5 hover:bg-gray-50 rounded-xl text-sm" style={{fontFamily: f}}>{f}</button>)}
               </div>
             )}
           </div>
 
           {/* Color Dropdown */}
           <div className="relative">
-            <button 
-              onClick={() => setActiveDropdown(activeDropdown === 'color' ? null : 'color')}
-              className={`flex items-center gap-2 px-6 py-2.5 rounded-full text-white font-bold text-sm shadow-lg transition-all ${gradients.primary} ${gradients.hover}`}
-            >
-              <Palette size={18} /> Color <ChevronDown size={14}/>
+            <button onClick={() => setActiveDropdown(activeDropdown === 'color' ? null : 'color')} className={`whitespace-nowrap flex items-center gap-2 px-4 py-2.5 rounded-full text-white text-[11px] md:text-xs font-bold transition-all ${gradients.primary}`}>
+              <Palette size={14}/> Color <ChevronDown size={12}/>
             </button>
             {activeDropdown === 'color' && (
-              <div className="absolute top-full mt-3 left-0 w-64 bg-white rounded-3xl shadow-2xl p-4 grid grid-cols-2 gap-3 z-50 border border-gray-100">
+              <div className="absolute top-full left-0 mt-2 w-64 bg-white shadow-2xl rounded-3xl z-[210] border border-gray-100 p-4 grid grid-cols-2 gap-2 animate-in fade-in slide-in-from-top-2">
                 {colors.map(c => (
-                  <button key={c.value} onClick={() => { setLogoConfig({...logoConfig, bgColor: c.value}); setActiveDropdown(null); }} className="flex items-center gap-3 p-2 border border-gray-50 rounded-2xl hover:bg-gray-50 transition-all group">
-                    <span className="w-8 h-8 rounded-xl shrink-0 shadow-inner" style={{ backgroundColor: c.value }} />
-                    <span className="text-[11px] font-bold text-gray-600 group-hover:text-blue-600">{c.name}</span>
+                  <button key={c.value} onClick={() => {setLogoConfig({...logoConfig, bgColor: c.value}); setActiveDropdown(null);}} className="flex items-center gap-2 p-2 border border-gray-50 rounded-xl hover:bg-gray-50 transition-all">
+                    <span className="w-6 h-6 rounded-lg shrink-0 shadow-inner" style={{ backgroundColor: c.value }} />
+                    <span className="text-[10px] font-bold text-gray-600">{c.name}</span>
                   </button>
                 ))}
               </div>
@@ -198,31 +153,33 @@ function EditorUI() {
           </div>
         </div>
 
-        
-        {/* CANVAS CONTAINER */}
-<div className="flex-1 flex items-center justify-center p-4 md:p-6 overflow-hidden bg-transparent relative">
-    <div className="w-2xl h-2xl max-w-175 max-h-112.5 flex items-center justify-center">
-        <LogoCanvas config={logoConfig} />
-    </div>
-</div>
+        {/* CANVAS AREA */}
+        <div className="flex-1 flex items-center justify-center p-6 md:p-12 bg-[#f8fafc] overflow-hidden relative">
+          {/* Watermark only on desktop */}
+          <div className="absolute hidden md:block select-none opacity-[0.03] font-black text-[15vw] rotate-[-10deg] pointer-events-none">
+            {logoConfig.text}
+          </div>
+          
+          <div className="w-full h-full max-w-[800px] max-h-[500px] flex items-center justify-center relative z-10">
+             <LogoCanvas config={logoConfig} />
+          </div>
+        </div>
 
-        {/* BOTTOM BUTTONS */}
-        <div className="h-24 bg-white/90 border-t border-gray-100 flex items-center justify-center px-10 gap-6 shrink-0 shadow-inner">
-          <button className="flex items-center gap-2 px-8 py-3 bg-white border border-gray-200 rounded-full font-bold text-gray-700 hover:shadow-md transition-all">
-            <Eye size={18}/> Preview
+        {/* BOTTOM NAVIGATION */}
+        <div className="h-20 md:h-24 bg-white/80 backdrop-blur-md border-t border-gray-100 flex items-center justify-around md:justify-center gap-3 md:gap-6 px-4 md:px-10 shrink-0 shadow-[-0px_-4px_20px_rgba(0,0,0,0.02)]">
+          <button className="hidden sm:flex items-center gap-2 px-6 py-3 bg-white border border-gray-200 rounded-full font-bold text-gray-700 text-xs md:text-sm hover:shadow-md transition-all">
+            <Eye size={16}/> Preview
           </button>
           
-          {/* Update: Save Button with API Call */}
           <button 
-            onClick={handleSaveLogo}
-            disabled={isLoading}
-            className={`flex items-center gap-2 px-10 py-3 rounded-full font-bold text-white shadow-xl transition-all ${gradients.primary} ${gradients.hover} disabled:opacity-70`}
+            onClick={() => {setIsLoading(true); setTimeout(()=>setIsLoading(false), 2000)}} 
+            className={`flex-1 md:flex-none flex items-center justify-center gap-2 px-8 py-3.5 rounded-full font-bold text-white text-xs md:text-sm shadow-xl transition-all ${gradients.primary} ${gradients.hover}`}
           >
             {isLoading ? <Loader2 className="animate-spin" size={18} /> : <Save size={18}/>}
-            {isLoading ? "Saving..." : "Save Design"}
+            <span>{isLoading ? "Saving..." : "Save Design"}</span>
           </button>
 
-          <button className="flex items-center gap-2 px-8 py-3 bg-white text-orange-600 rounded-full font-bold border border-orange-200 hover:shadow-md transition-all">
+          <button className="flex-1 md:flex-none flex items-center justify-center gap-2 px-6 py-3.5 bg-white text-orange-600 rounded-full font-bold text-xs md:text-sm border border-orange-200 hover:bg-orange-50 transition-all">
             <ShoppingCart size={18}/> Buy Logo
           </button>
         </div>

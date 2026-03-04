@@ -3,6 +3,18 @@ import React, { useEffect, useState } from 'react';
 import { motion } from 'framer-motion';
 import { useRouter } from 'next/navigation';
 import { Zap } from 'lucide-react'; 
+import { useSelector } from "react-redux";
+import { RootState } from "@/store/store";
+
+const { loading, data } = useSelector(
+  (state: RootState) => state.logo
+);
+
+useEffect(() => {
+  if (!loading && data) {
+    router.push("/results");
+  }
+}, [loading, data]);
 
 const steps = [
   { id: 1, text: 'Analyzing your preferences...', icon: '✨', color: 'from-pink-500 to-orange-400' },
@@ -51,8 +63,8 @@ const CreatingLogos = () => {
   useEffect(() => {
     // Navigate to next page after 7 seconds
     const navigateTimer = setTimeout(() => {
-      router.push('/create/results'); 
-    }, 7000);
+      router.push('/results'); 
+    }, 5000);
 
     return () => clearTimeout(navigateTimer);
   }, [router]);

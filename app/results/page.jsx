@@ -4,6 +4,8 @@ import Image from 'next/image';
 import { useRouter } from 'next/navigation';
 import { motion, AnimatePresence } from 'framer-motion';
 import { ChevronLeft, Edit3, Bookmark, X, Loader2, ShoppingCart } from 'lucide-react';
+import { useSelector } from "react-redux";
+import { RootState } from "@/store/store";
 
 const ResultsPage = () => {
   const router = useRouter();
@@ -18,24 +20,23 @@ const ResultsPage = () => {
           method: 'POST',
           headers: { 'Content-Type': 'application/json' },
           body: JSON.stringify({
-            name: "ARHAM", 
+            name: "ARHAM",
             industry: 23,
             color: "1",
             font: "1",
             p: 2,
             dataPage: 0,
-            select: "55540,55014,54795,54792,54558,54559,54553" 
+            select: "55540,55014,54795,54792,54558,54559,54553"
           }),
         });
 
         const result = await response.json();
-        
+
         if (result && result.templates) {
-          // Sirf pehle 6 designs uthane ke liye slice use kiya hai
           const formattedLogos = result.templates.slice(0, 6).map((tpl, index) => ({
             id: tpl.id || index,
             name: `Design ${index + 1}`,
-            src: tpl.image_url || '/image1.jpg', 
+            src: tpl.image_url || '/image1.jpg',
             initials: "ARHAM",
             themeColor: tpl.color || '#8b5e3c'
           }));
@@ -82,10 +83,9 @@ const ResultsPage = () => {
   }
 
   return (
-    <div className="min-h-screen bg-pink-50 w-full pb-20 -mt-8">
+    <div className="min-h-screen bg-pink-50 w-full pb-20 pt-10">
       <div className="max-w-6xl mx-auto p-8 flex flex-col items-center">
-        
-        {/* Header */}
+
         <div className="w-full flex justify-between items-center mb-12">
           <div className="flex flex-col">
             <h1 className="text-4xl font-extrabold text-slate-900">Your Logo Designs</h1>
@@ -96,36 +96,34 @@ const ResultsPage = () => {
           </button>
         </div>
 
-        {/* Designs Grid - 3 Columns for Desktop, total 6 items */}
         <div className="grid grid-cols-1 sm:grid-cols-2 lg:grid-cols-3 gap-8 w-full">
           {logos.map((design) => (
-            <motion.div 
+            <motion.div
               key={design.id}
               whileHover={{ y: -8 }}
               className="group bg-white p-4 rounded-[2.5rem] shadow-md relative overflow-hidden flex flex-col items-center border border-transparent hover:border-pink-200 transition-all"
             >
               <div className="w-full aspect-square relative rounded-[2rem] overflow-hidden bg-slate-50 mb-4">
                 <Image src={design.src} alt={design.name} fill className="object-contain p-4" unoptimized />
-                
-                {/* --- Hover Buttons (3 Buttons Now) --- */}
+
                 <div className="absolute inset-0 bg-black/20 opacity-0 group-hover:opacity-100 transition-opacity flex items-end justify-center pb-6 px-2">
                   <div className="flex flex-row gap-2 w-full justify-center px-2">
-                    <button 
+                    <button
                       onClick={() => setSelectedDesign(design)}
-                      className="flex-1 flex items-center justify-center gap-1 bg-white text-sky-500 py-2.5 rounded-full text-[10px] font-black shadow-md hover:scale-105 transition-transform whitespace-nowrap"
+                      className="flex-1 flex items-center justify-center gap-1 bg-white text-sky-500 py-2.5 rounded-full text-[10px] font-black shadow-md"
                     >
                       <Bookmark size={12} /> Preview
                     </button>
 
-                    <button 
+                    <button
                       onClick={() => handleEditOnCanva(design)}
-                      className="flex-1 flex items-center justify-center gap-1 bg-white text-emerald-500 py-2.5 rounded-full text-[10px] font-black shadow-md hover:scale-105 transition-transform whitespace-nowrap"
+                      className="flex-1 flex items-center justify-center gap-1 bg-white text-emerald-500 py-2.5 rounded-full text-[10px] font-black shadow-md"
                     >
                       <Edit3 size={12} /> Edit
                     </button>
 
-                    <button 
-                      className="flex-1 flex items-center justify-center gap-1 bg-orange-500 text-white py-2.5 rounded-full text-[10px] font-black shadow-md hover:scale-105 hover:bg-orange-600 transition-all whitespace-nowrap"
+                    <button
+                      className="flex-1 flex items-center justify-center gap-1 bg-orange-500 text-white py-2.5 rounded-full text-[10px] font-black shadow-md"
                     >
                       <ShoppingCart size={12} /> Buy
                     </button>
@@ -138,26 +136,38 @@ const ResultsPage = () => {
         </div>
       </div>
 
-      {/* Preview Modal */}
       <AnimatePresence>
         {selectedDesign && (
-          <div className="fixed inset-0 z-[100] flex items-center justify-center p-4">
-            <motion.div initial={{ opacity: 0 }} animate={{ opacity: 1 }} exit={{ opacity: 0 }} onClick={() => setSelectedDesign(null)} className="absolute inset-0 bg-slate-900/60 backdrop-blur-sm" />
-            <motion.div initial={{ scale: 0.9, opacity: 0 }} animate={{ scale: 1, opacity: 1 }} exit={{ scale: 0.9, opacity: 0 }} className="bg-white rounded-[2.5rem] w-full max-w-3xl shadow-2xl relative z-10 p-8">
-               <button onClick={() => setSelectedDesign(null)} className="absolute top-6 right-6 p-2 bg-slate-100 rounded-full hover:bg-slate-200"><X size={20}/></button>
-               <h2 className="text-2xl font-bold mb-6 text-slate-800">Logo Preview</h2>
-               <div className="bg-slate-50 rounded-[2rem] p-12 flex items-center justify-center mb-8 border border-dashed border-slate-200">
-                  <Image src={selectedDesign.src} alt="Preview" width={300} height={300} className="object-contain" unoptimized />
-               </div>
-               
-               <div className="flex flex-col sm:flex-row gap-4">
-                 <button onClick={() => handleEditOnCanva(selectedDesign)} className="flex-1 py-4 rounded-2xl font-bold bg-pink-600 text-white shadow-lg hover:bg-pink-700 transition-all flex items-center justify-center gap-2">
-                   <Edit3 size={20} /> Edit Design
-                 </button>
-                 <button className="flex-1 py-4 rounded-2xl font-bold bg-orange-500 text-white shadow-lg hover:bg-orange-600 transition-all flex items-center justify-center gap-2">
-                   <ShoppingCart size={20} /> Buy Now
-                 </button>
-               </div>
+          <div className="fixed inset-0 z-100 flex items-center justify-center p-4">
+            <motion.div
+              initial={{ opacity: 0 }}
+              animate={{ opacity: 1 }}
+              exit={{ opacity: 0 }}
+              onClick={() => setSelectedDesign(null)}
+              className="absolute inset-0 bg-slate-900/60 backdrop-blur-sm"
+            />
+            <motion.div
+              initial={{ scale: 0.9, opacity: 0 }}
+              animate={{ scale: 1, opacity: 1 }}
+              exit={{ scale: 0.9, opacity: 0 }}
+              className="bg-white rounded-[2.5rem] w-full max-w-3xl shadow-2xl relative z-10 p-8"
+            >
+              <button onClick={() => setSelectedDesign(null)} className="absolute top-6 right-6 p-2 bg-slate-100 rounded-full">
+                <X size={20} />
+              </button>
+              <h2 className="text-2xl font-bold mb-6 text-slate-800">Logo Preview</h2>
+              <div className="bg-slate-50 rounded-[2rem] p-12 flex items-center justify-center mb-8 border border-dashed border-slate-200">
+                <Image src={selectedDesign.src} alt="Preview" width={300} height={300} className="object-contain" unoptimized />
+              </div>
+
+              <div className="flex flex-col sm:flex-row gap-4">
+                <button onClick={() => handleEditOnCanva(selectedDesign)} className="flex-1 py-4 rounded-2xl font-bold bg-pink-600 text-white">
+                  <Edit3 size={20} /> Edit Design
+                </button>
+                <button className="flex-1 py-4 rounded-2xl font-bold bg-orange-500 text-white">
+                  <ShoppingCart size={20} /> Buy Now
+                </button>
+              </div>
             </motion.div>
           </div>
         )}

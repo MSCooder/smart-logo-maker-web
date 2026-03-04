@@ -1,3 +1,4 @@
+"use client";
 import Image from "next/image";
 import AboutHero from "../../components/About/AboutHero";
 import OurStory from "../../components/About/NumberSection.jsx";

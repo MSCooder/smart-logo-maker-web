@@ -8,19 +8,28 @@ export default function ConditionalLayout({ children }) {
   
   const isAuthRoute = pathname.startsWith("/auth");
   const isCreateRoute = pathname.startsWith("/create");
+  
+  // Pehle wali conditions
+  const isGeneratingRoute = pathname.startsWith("/generating");
+  const isResultRoute = pathname.startsWith("/result");
+
+  // Nayi Condition: URL agar /editor se start ho raha ho (query parameters ignore ho jayenge)
+  const isEditorRoute = pathname.startsWith("/editor");
+
+  // In sab pages par Navbar aur Footer hide hoga
+  const hideAll = isGeneratingRoute || isResultRoute || isEditorRoute;
 
   return (
     <>
-      {/* Agar Auth route nahi hai, to Navbar dikhao. 
-          Lekin agar Create route hai, to 'minimal' mode on kar do */}
-      {!isAuthRoute && (
+      {/* Navbar logic */}
+      {!isAuthRoute && !hideAll && (
         <Navbar minimal={isCreateRoute} />
       )}
 
       <main>{children}</main>
 
-      {/* Footer sirf tab dikhao jab na Auth route ho aur na hi Create route */}
-      {!isAuthRoute && !isCreateRoute && <Footer />}
+      {/* Footer logic */}
+      {!isAuthRoute && !isCreateRoute && !hideAll && <Footer />}
     </>
   );
 }

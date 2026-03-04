@@ -5,9 +5,9 @@ const fontStyles = [
   { name: 'Modern Sans', description: 'Clean and contemporary', style: 'font-sans' },
   { name: 'Elegant Serif', description: 'Sophisticated and timeless', style: 'font-serif' },
   { name: 'Bold Display', description: 'Strong and impactful', style: 'font-extrabold tracking-tighter' },
-  { name: 'Playful Rounded', description: 'Friendly and approachable', style: 'font-mono' },
+  { name: 'Playful Rounded', description: 'Friendly and approachable', style: 'font-mono text-pink-500' },
   { name: 'Minimal Light', description: 'Subtle and refined', style: 'font-light' },
-  { name: 'Classic Script', description: 'Elegant and decorative', style: 'font-serif italic' },
+  { name: 'Classic Script', description: 'Elegant and decorative', style: 'italic font-serif' },
 ];
 
 const Fonts = ({ onNext, onBack, data, setData }) => {
@@ -17,9 +17,9 @@ const Fonts = ({ onNext, onBack, data, setData }) => {
   };
 
   return (
-    <div className="flex flex-col items-center w-full animate-in fade-in slide-in-from-bottom-6 duration-700">
+    <div className="flex flex-col items-center w-full animate-in fade-in slide-in-from-bottom-6 duration-700 max-w-6xl">
       
-      {/* Top Left Back Button */}
+      {/* 1. Back Button */}
       <div className="w-full flex justify-start mb-10">
         <button
           onClick={onBack}
@@ -30,21 +30,21 @@ const Fonts = ({ onNext, onBack, data, setData }) => {
         </button>
       </div>
 
-      {/* Title Section */}
+      {/* 2. Title Section */}
       <div className="flex flex-col items-center mb-12 text-center">
         <div className="p-5 rounded-[2rem] bg-white shadow-xl shadow-pink-100/50 mb-6 border border-white">
           <Type size={40} className="text-pink-600" />
         </div>
         <h1 className="text-5xl font-black text-[#1A1A1A] tracking-tight mb-4">
-          Choose Your Font Style
+          Choose Your Font
         </h1>
         <p className="text-xl text-slate-500 font-medium max-w-lg">
           Select a typography style that matches your brand personality
         </p>
       </div>
 
-      {/* Grid Section */}
-      <div className="grid grid-cols-1 sm:grid-cols-2 md:grid-cols-3 gap-6 w-full mb-12">
+      {/* 3. Fonts Grid */}
+      <div className="grid grid-cols-1 sm:grid-cols-2 md:grid-cols-3 gap-6 w-3xl mb-12">
         {fontStyles.map((font) => {
           const isSelected = data.font === font.name;
 
@@ -61,8 +61,9 @@ const Fonts = ({ onNext, onBack, data, setData }) => {
                 }
               `}
             >
+              {/* Visual Preview of Font */}
               <span className={`text-5xl md:text-6xl text-slate-900 mb-2 ${font.style}`}>
-                Aa
+                AaBbCc
               </span>
 
               <div className="text-center">
@@ -74,6 +75,7 @@ const Fonts = ({ onNext, onBack, data, setData }) => {
                 </span>
               </div>
 
+              {/* Selection Badge */}
               {isSelected && (
                 <div className="absolute -top-2 -right-2 bg-linear-to-r from-[#FF5C00] to-[#FF007A] p-1.5 rounded-full shadow-lg border-2 border-white animate-in zoom-in-50 duration-300">
                   <svg className="w-4 h-4 text-white" fill="none" stroke="currentColor" viewBox="0 0 24 24">
@@ -86,7 +88,7 @@ const Fonts = ({ onNext, onBack, data, setData }) => {
         })}
       </div>
 
-      {/* Bottom Action Section */}
+      {/* 4. Action Buttons */}
       <div className="flex flex-col md:flex-row items-center justify-center gap-6 w-full max-w-2xl">
           <button
             onClick={onBack}

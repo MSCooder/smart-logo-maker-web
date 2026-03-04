@@ -1,3 +1,4 @@
+"use client";
 import Image from "next/image";
 import ContactForm from "../../components/Contact/ContactForm";
 import HowIthelps from "../../components/Contact/HowItHelps";
