@@ -41,7 +41,7 @@ function EditorUI() {
 
   const fonts = ['Arial', 'Verdana', 'Georgia', 'Courier New', 'Impact'];
   const colors = [
-    { name: 'Soft Blue', value: '#E0F2FE' },
+    { name: 'SoftBlue', value: '#E0F2FE' },
     { name: 'Mint', value: '#DCFCE7' },
     { name: 'Peach', value: '#FFEDD5' },
     { name: 'Lavender', value: '#F3E8FF' },
@@ -198,10 +198,13 @@ function EditorUI() {
           </div>
         </div>
 
-        {/* CANVAS */}
-        <div className="flex-1 flex items-center justify-center p-6 overflow-hidden">
-            <LogoCanvas config={logoConfig} />
-        </div>
+        
+        {/* CANVAS CONTAINER */}
+<div className="flex-1 flex items-center justify-center p-4 md:p-6 overflow-hidden bg-transparent relative">
+    <div className="w-2xl h-2xl max-w-175 max-h-112.5 flex items-center justify-center">
+        <LogoCanvas config={logoConfig} />
+    </div>
+</div>
 
         {/* BOTTOM BUTTONS */}
         <div className="h-24 bg-white/90 border-t border-gray-100 flex items-center justify-center px-10 gap-6 shrink-0 shadow-inner">
