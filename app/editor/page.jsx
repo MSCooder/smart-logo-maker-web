@@ -71,7 +71,7 @@ function EditorUI() {
     <div className="fixed inset-0 bg-[#f4f7fa] flex flex-col md:flex-row overflow-hidden font-sans">
       
       {/* 1. MOBILE SIDEBAR - Z-INDEX FIX */}
-      <div className={`fixed inset-0 z-[200] md:hidden transition-opacity duration-300 ${sidebarOpen ? "opacity-100 visible" : "opacity-0 invisible"}`}>
+      <div className={`fixed inset-0 z-200 md:hidden transition-opacity duration-300 ${sidebarOpen ? "opacity-100 visible" : "opacity-0 invisible"}`}>
         <div className="absolute inset-0 bg-black/40 backdrop-blur-sm" onClick={() => setSidebarOpen(false)} />
         <aside className={`absolute inset-y-0 left-0 w-72 bg-white shadow-2xl transition-transform duration-300 ${sidebarOpen ? "translate-x-0" : "-translate-x-full"}`}>
           <div className="p-6 border-b flex justify-between items-center">
@@ -129,7 +129,7 @@ function EditorUI() {
               <Type size={14}/> Font <ChevronDown size={12}/>
             </button>
             {activeDropdown === 'font' && (
-              <div className="absolute top-full left-0 mt-2 w-48 bg-white shadow-2xl rounded-2xl z-[210] border border-gray-100 p-2 animate-in fade-in slide-in-from-top-2">
+              <div className="absolute top-full left-0 mt-2 w-48 bg-white shadow-2xl rounded-2xl z-210 border border-gray-100 p-2 animate-in fade-in slide-in-from-top-2">
                 {fonts.map(f => <button key={f} onClick={() => {setLogoConfig({...logoConfig, fontFamily: f}); setActiveDropdown(null);}} className="w-full text-left p-2.5 hover:bg-gray-50 rounded-xl text-sm" style={{fontFamily: f}}>{f}</button>)}
               </div>
             )}
@@ -141,7 +141,7 @@ function EditorUI() {
               <Palette size={14}/> Color <ChevronDown size={12}/>
             </button>
             {activeDropdown === 'color' && (
-              <div className="absolute top-full left-0 mt-2 w-64 bg-white shadow-2xl rounded-3xl z-[210] border border-gray-100 p-4 grid grid-cols-2 gap-2 animate-in fade-in slide-in-from-top-2">
+              <div className="absolute top-full left-0 mt-2 w-64 bg-white shadow-2xl rounded-3xl z-210 border border-gray-100 p-4 grid grid-cols-2 gap-2 animate-in fade-in slide-in-from-top-2">
                 {colors.map(c => (
                   <button key={c.value} onClick={() => {setLogoConfig({...logoConfig, bgColor: c.value}); setActiveDropdown(null);}} className="flex items-center gap-2 p-2 border border-gray-50 rounded-xl hover:bg-gray-50 transition-all">
                     <span className="w-6 h-6 rounded-lg shrink-0 shadow-inner" style={{ backgroundColor: c.value }} />
@@ -160,7 +160,7 @@ function EditorUI() {
             {logoConfig.text}
           </div>
           
-          <div className="w-full h-full max-w-[800px] max-h-[500px] flex items-center justify-center relative z-10">
+          <div className="w-full h-full max-w-200 max-h-125 flex items-center justify-center relative z-10">
              <LogoCanvas config={logoConfig} />
           </div>
         </div>
