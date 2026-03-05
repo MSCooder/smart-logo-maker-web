@@ -1,7 +1,7 @@
 import { Geist, Geist_Mono } from "next/font/google";
 import './globals.css';
 import ConditionalLayout from "../components/MainComponents/ConditionalLayout";
-import { Providers } from "./providers"; // Custom provider import karein
+import { Providers } from "./providers";
 
 const geistSans = Geist({
   variable: "--font-geist-sans",
@@ -17,17 +17,17 @@ export const metadata = {
   title: "Smart Logo Maker"
 };
 
-export default function Layout({ children }) {
+export default function RootLayout({ children })
+  {
   return (
     <html lang="en">
-      <body className={`${geistSans.variable} ${geistMono.variable} antialiased`}>
-        {/* Providers ke andar store already configured hai */}
+      <body>
         <Providers>
           <ConditionalLayout>
             {children}
           </ConditionalLayout>
         </Providers>
-      </body>
+     </body>
     </html>
   );
 }

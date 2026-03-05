@@ -1,5 +1,5 @@
 import { configureStore } from '@reduxjs/toolkit';
-import logoReducer from './slices/logoSlice'; // Path check kar lein
+import logoReducer from './slices/logoSlice';
 
 export const store = configureStore({
   reducer: {
@@ -7,6 +7,6 @@ export const store = configureStore({
   },
 });
 
-// Types for TypeScript (Inki zaroorat useLogoFlow hook mein paregi)
+// TypeScript ke liye types exports
 export type RootState = ReturnType<typeof store.getState>;
 export type AppDispatch = typeof store.dispatch;
