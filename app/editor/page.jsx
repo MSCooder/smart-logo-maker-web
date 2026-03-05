@@ -95,24 +95,27 @@ function EditorUI() {
       <main className="flex-1 flex flex-col relative h-full min-w-0">
         
         {/* TOPBAR */}
-        <div className="h-16 md:h-20 bg-white border-b border-gray-100 flex items-center justify-between px-4 md:px-8 shrink-0 z-[100]">
+        <div className="h-16 md:h-20 bg-white border-b border-gray-100 flex items-center justify-center px-4 md:px-8 shrink-0 z-[100]">
           <div className="flex items-center gap-3">
             <button onClick={() => setSidebarOpen(true)} className="lg:hidden p-2.5 bg-gray-50 rounded-xl hover:bg-gray-100 transition-colors">
               <Menu size={22} className="text-gray-600"/>
             </button>
+          </div>
+
+          <div className="flex items-center gap-2 md:gap-4">
             <div className="hidden sm:flex gap-2">
                <button className="flex items-center gap-2 px-4 py-2 bg-gray-50 rounded-full text-xs font-bold text-gray-600">
                  <Zap size={14} className="text-orange-500"/> Style
                </button>
+               <button className="flex items-center gap-2 px-4 py-2 bg-gray-50 rounded-full text-xs font-bold text-gray-600">
+                 <Zap size={14} className="text-orange-500"/> Layout
+               </button>
             </div>
-          </div>
-
-          <div className="flex items-center gap-2 md:gap-4">
             {/* Font Dropdown */}
             <div className="relative">
               <button onClick={() => setActiveDropdown(activeDropdown === 'font' ? null : 'font')} 
                 className={`flex items-center gap-2 px-4 py-2.5 rounded-full text-white text-xs font-bold transition-all ${gradients.primary}`}>
-                <Type size={14}/> <span className="hidden xs:inline">Font</span> <ChevronDown size={12}/>
+                <Type size={14}/> <span className=" xs:inline">Font</span> <ChevronDown size={12}/>
               </button>
               {activeDropdown === 'font' && (
                 <div className="absolute top-full right-0 mt-2 w-48 bg-white shadow-2xl rounded-2xl z-[110] border border-gray-100 p-2 animate-in fade-in slide-in-from-top-2">
@@ -128,7 +131,7 @@ function EditorUI() {
             <div className="relative">
               <button onClick={() => setActiveDropdown(activeDropdown === 'color' ? null : 'color')} 
                 className={`flex items-center gap-2 px-4 py-2.5 rounded-full text-white text-xs font-bold transition-all ${gradients.primary}`}>
-                <Palette size={14}/> <span className="hidden xs:inline">Color</span> <ChevronDown size={12}/>
+                <Palette size={14}/> <span className=" xs:inline">Color</span> <ChevronDown size={12}/>
               </button>
               {activeDropdown === 'color' && (
                 <div className="absolute top-full right-0 mt-2 w-64 bg-white shadow-2xl rounded-3xl z-[110] border border-gray-100 p-4 grid grid-cols-2 gap-2 animate-in fade-in slide-in-from-top-2">
@@ -151,15 +154,21 @@ function EditorUI() {
         </div>
 
         {/* BOTTOM NAV */}
-        <div className="h-20 md:h-24 bg-white border-t border-gray-100 flex items-center justify-center gap-4 px-6 shrink-0 z-[50]">
+        <div className="h-10 md:h-24 bg-white border-t border-gray-100 flex items-center justify-center gap-4 px-6 shrink-0 z-[50]">
           <button 
             onClick={() => {setIsLoading(true); setTimeout(()=>setIsLoading(false), 2000)}} 
             className={`flex-1 md:flex-none flex items-center justify-center gap-2 px-10 py-3.5 rounded-full font-bold text-white text-sm shadow-xl transition-all ${gradients.primary}`}>
             {isLoading ? <Loader2 className="animate-spin" size={18} /> : <Save size={18}/>}
             <span>Save Design</span>
           </button>
+          <button 
+            onClick={() => {setIsLoading(true); setTimeout(()=>setIsLoading(false), 2000)}} 
+            className={`flex-1 md:flex-none flex items-center justify-center gap-2 px-10 py-3.5 rounded-full font-bold text-white text-sm shadow-xl transition-all ${gradients.primary}`}>
+            {isLoading ? <Loader2 className="animate-spin" size={18} /> : <Save size={18}/>}
+            <span>Preview</span>
+          </button>
           <button className="flex-1 md:flex-none flex items-center justify-center gap-2 px-8 py-3.5 bg-white text-orange-600 rounded-full font-bold text-sm border border-orange-200">
-            <ShoppingCart size={18}/> <span className="hidden xs:inline">Buy Logo</span>
+            <ShoppingCart size={18}/> <span className="xs:inline">Buy Logo</span>
           </button>
         </div>
       </main>
