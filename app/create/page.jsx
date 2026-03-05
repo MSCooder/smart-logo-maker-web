@@ -61,7 +61,7 @@ export default function CreateLogoPage() {
             </div>
             <div className="h-2 w-full bg-gray-100 rounded-full overflow-hidden">
               <div 
-                className="h-full bg-gradient-to-r from-[#FF5C00] via-[#FF007A] to-[#C400FF] transition-all duration-700 ease-in-out rounded-full"
+                className="h-full bg-linear-to-r from-[#FF5C00] via-[#FF007A] to-[#C400FF] transition-all duration-700 ease-in-out rounded-full"
                 style={{ width: `${progressPercentage}%` }}
               />
             </div>
