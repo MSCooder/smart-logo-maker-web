@@ -31,9 +31,7 @@ const BusinessInfo = ({ onNext, data, setData }) => {
   };
 
   return (
-    <div className="pt-20 w-full flex flex-col items-center max-w-6xl mx-auto relative animate-in fade-in slide-in-from-bottom-4 duration-700 px-4">
-
-      {/* Back Button Section */}
+<div className="pt-10 w-full max-w-4xl mx-auto flex flex-col items-center justify-center animate-in fade-in slide-in-from-bottom-4 duration-700 px-4">      {/* Back Button Section */}
       <div className="w-full max-w-4xl flex justify-start mb-6 md:mb-10">
         <button
           onClick={() => window.history.back()}

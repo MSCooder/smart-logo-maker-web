@@ -25,7 +25,7 @@ const Fonts = ({ onNext, onBack, data, setData }) => {
   };
 
   return (
-    <div className="pt-20 flex flex-col items-center w-full animate-in fade-in slide-in-from-bottom-6 duration-700 max-w-6xl px-4 md:px-0 mx-auto ">
+    <div className="pt-10 flex flex-col items-center w-full animate-in fade-in slide-in-from-bottom-6 duration-700 max-w-6xl px-4 md:px-0 mx-auto ">
       
       {/* Back Button */}
       <div className="w-full max-w-4xl flex justify-start mb-6 md:mb-10">

@@ -9,13 +9,16 @@ import { generateLogosAction } from '@/store/slices/logoSlice'; // Sahi path che
 const CreatingLogos = () => {
   const router = useRouter();
   const dispatch = useDispatch();
-  
+
   // Store se data lein
   const { formData, status, results } = useSelector((state) => state.logo);
 
-  // Generation trigger karein
   useEffect(() => {
+    console.log("Current Status in CreatingLogos:", status);
+
+    // Generation trigger karein
     if (status === 'idle') {
+      console.log("Triggering API Call...");
       dispatch(generateLogosAction(formData));
     }
   }, [dispatch, status, formData]);
@@ -30,7 +33,7 @@ const CreatingLogos = () => {
   const steps = [
     { id: 1, text: 'Analyzing your preferences...', icon: '✨', color: 'from-pink-500 to-orange-400' },
     { id: 2, text: 'Selecting color combinations...', icon: '🎨', color: 'from-pink-500 to-orange-400' },
-    { id: 3, text: 'Generating logo variations...', icon: '🪄', color: 'from-pink-500 to-orange-400' },
+    { id: 3, text: 'Generating logo variations...', icon: '✨', color: 'from-pink-500 to-orange-400' },
     { id: 4, text: 'Finalizing your designs...', icon: '⚡', color: 'from-pink-500 to-orange-400' },
   ];
 
@@ -50,7 +53,7 @@ const CreatingLogos = () => {
   };
 
   return (
-    <div className="min-h-screen flex flex-col items-center justify-center p-6 bg-white">
+    <div className=" mt-20 min-h-screen flex flex-col items-center justify-center p-6 bg-white">
       <div className="w-full max-w-2xl p-6 md:p-12 flex flex-col items-center text-center">
         <div className="p-4 rounded-full bg-pink-100 text-pink-600 mb-8 animate-bounce">
           <Zap size={48} fill="currentColor" />
@@ -90,9 +93,17 @@ const CreatingLogos = () => {
             </motion.div>
           ))}
         </motion.div>
+
+        <div className="flex items-center gap-2 mt-12">
+          <div className="w-3 h-3 rounded-full bg-pink-500 animate-bounce"></div>
+          <div className="w-3 h-3 rounded-full bg-pink-500 animate-bounce [animation-delay:0.2s]"></div>
+          <div className="w-3 h-3 rounded-full bg-pink-500 animate-bounce [animation-delay:0.4s]"></div>
+        </div>
+
       </div>
     </div>
   );
 };
 
 export default CreatingLogos;
+

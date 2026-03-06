@@ -38,7 +38,7 @@ const Category = ({ onNext, onBack, data, setData }) => {
   };
 
   return (
-    <div className="pt-20 flex flex-col items-center w-full max-w-10xl mx-auto animate-in fade-in slide-in-from-bottom-6 duration-700 px-4">
+    <div className=" flex flex-col items-center w-full max-w-10xl mx-auto animate-in fade-in slide-in-from-bottom-6 duration-700 px-4">
       
       {/* Back Button */}
       <div className="w-full max-w-4xl flex justify-start mb-6 md:mb-10 mt-6 md:mt-10">
@@ -62,7 +62,7 @@ const Category = ({ onNext, onBack, data, setData }) => {
       </div>
 
       {/* Grid Container */}
-      <div className="grid grid-cols-2 md:grid-cols-3 lg:grid-cols-4 gap-4 md:gap-8 mb-16 w-full max-w-5xl pt-4 md:pt-10">
+      <div className="grid grid-cols-2 md:grid-cols-3 lg:grid-cols-3 gap-4 md:gap-8 mb-16 w-full max-w-4xl pt-4 md:pt-10">
         {industries.map((item) => {
           const IconComponent = item.icon; 
           const isSelected = data?.category === item.name;

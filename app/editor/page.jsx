@@ -79,7 +79,7 @@ function EditorUI() {
         <div className="absolute inset-0 bg-black/40 backdrop-blur-sm" onClick={() => setSidebarOpen(false)} />
         <aside className={`absolute inset-y-0 left-0 w-80 bg-white shadow-2xl transition-transform duration-300 ${sidebarOpen ? "translate-x-0" : "-translate-x-full"}`}>
           <div className="p-6 border-b flex justify-between items-center">
-            <span className={`font-bold text-sm ${gradients.text}`}>VARIATIONS</span>
+            <span className={`font-bold text-500 ${gradients.text}`}>VARIATIONS</span>
             <X onClick={() => setSidebarOpen(false)} className="cursor-pointer text-gray-400" size={24} />
           </div>
           <div className="p-4 space-y-4 overflow-y-auto h-[calc(100vh-80px)]">
@@ -117,15 +117,13 @@ function EditorUI() {
       <main className="flex-1 flex flex-col relative h-full min-w-0">
 
         {/* TOPBAR */}
-        <div className="h-16 md:h-20 bg-white border-b border-gray-100 flex items-center justify-between px-4 md:px-8 shrink-0 z-100">
+        <div className="h-16 md:h-20 bg-white border-b border-gray-100 flex items-center justify-center px-4 md:px-8 shrink-0 z-100">
           <div className="flex items-center gap-3">
             <button onClick={() => setSidebarOpen(true)} className="lg:hidden p-2.5 bg-gray-50 rounded-xl">
               <Menu size={22} className="text-gray-600" />
             </button>
-
           </div>
-
-          {/* <div className="flex items-center justify-center gap-2 md:gap-4"> */}
+          <div className="flex items-center justify-center gap-2 md:gap-4">
             <button className="flex-1 md:flex-none flex items-center justify-center gap-2 px-5 py-2 bg-white text-orange-600 rounded-full font-bold text-sm border border-orange-200">
               <ShoppingCart size={18} /> <span>Style</span>
             </button><button className="flex-1 md:flex-none flex items-center justify-center gap-2 px-5 py-2 bg-white text-orange-600 rounded-full font-bold text-sm border border-orange-200">
@@ -165,6 +163,8 @@ function EditorUI() {
                 </div>
               )}
             </div>
+          </div>
+
           </div>
         {/* </div> */}
 
