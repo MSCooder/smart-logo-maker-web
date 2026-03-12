@@ -28,7 +28,7 @@ const Hero = () => {
       {/* 1. BACKGROUND IMAGE*/}
       <div className="absolute inset-0 z-0 pointer-events-none select-none overflow-hidden">
         <img
-          src="/logo1.svg"
+          src="logos/logo1.svg"
           alt="background-decoration"
           className="absolute 
                /* Position fixing */

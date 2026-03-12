@@ -1,9 +1,11 @@
 "use client";
-import React, { useState, Suspense, useEffect } from 'react';
+import React, { useState, Suspense, useEffect, useRef } from 'react'; // ایک بار امپورٹ کریں
 import { useSearchParams } from 'next/navigation';
 import dynamic from 'next/dynamic';
-import { Palette, Type, Zap, Save, ShoppingCart, ChevronDown, Loader2, Menu, X } from 'lucide-react';
-import { useSelector } from 'react-redux'; // Redux check ke liye
+import { Palette, Type, Save, ShoppingCart, ChevronDown, Menu, X, Edit3 } from 'lucide-react';
+import { useSelector } from 'react-redux';
+import { motion, AnimatePresence } from 'framer-motion';
+import { useRouter } from 'next/navigation';
 
 const LogoCanvas = dynamic(() => import('../../components/Editor/Canvas'), {
   ssr: false,
@@ -24,6 +26,36 @@ export default function EditorPage() {
 }
 
 function EditorUI() {
+
+  const canvasRef = useRef(null); // <--- Hooks فنکشن کے بالکل شروع میں ہوں
+  const router = useRouter();
+  const [selectedDesign, setSelectedDesign] = useState(null);
+
+  const handleDownload = () => {
+    // یہاں ہم چیک کر رہے ہیں کہ کیا ref موجود ہے
+    if (canvasRef.current) {
+      const stage = canvasRef.current.getStage();
+      const dataURL = stage.toDataURL({ pixelRatio: 2, mimeType: 'image/png' });
+      const link = document.createElement('a');
+      link.download = 'logo.png';
+      link.href = dataURL;
+      link.click();
+    } else {
+      console.error("Canvas ref is null!"); // اگر بٹن کام نہ کرے تو یہاں دیکھیں
+    }
+  };
+
+  // Preview Button Handler
+  const handlePreviewClick = () => {
+    setSelectedDesign({
+      src: logoConfig.imageUrl,
+      name: logoConfig.text,
+      // اگر آپ کو مزید ڈیٹا چاہیے تو یہاں ایڈ کریں
+      initials: logoConfig.text,
+      themeColor: logoConfig.bgColor
+    });
+  };
+
   const searchParams = useSearchParams();
 
   // --- STEP 5: URL Handover Logic ---
@@ -165,7 +197,7 @@ function EditorUI() {
             </div>
           </div>
 
-          </div>
+        </div>
         {/* </div> */}
 
         {/* CANVAS */}
@@ -175,7 +207,9 @@ function EditorUI() {
 
         {/* BOTTOM NAV */}
         <div className="h-20 md:h-24 bg-white border-t border-gray-100 flex items-center justify-center gap-4 px-6 shrink-0 z-50">
-          <button className={`flex-1 md:flex-none flex items-center justify-center gap-2 px-10 py-3.5 rounded-full font-bold text-white text-sm shadow-xl transition-all ${gradients.primary}`}>
+          <button 
+           onClick={handlePreviewClick}
+          className={`flex-1 md:flex-none flex items-center justify-center gap-2 px-10 py-3.5 rounded-full font-bold text-white text-sm shadow-xl transition-all ${gradients.primary}`}>
             <Save size={18} />
             <span>Preview</span>
           </button>
@@ -184,11 +218,83 @@ function EditorUI() {
             <span>Save Design</span>
           </button>
 
-          <button className="flex-1 md:flex-none flex items-center justify-center gap-2 px-8 py-3.5 bg-white text-orange-600 rounded-full font-bold text-sm border border-orange-200">
+          <button
+          onClick={handleDownload}
+          className="flex-1 md:flex-none flex items-center justify-center gap-2 px-8 py-3.5 bg-white text-orange-600 rounded-full font-bold text-sm border border-orange-200">
             <ShoppingCart size={18} /> <span>Download</span>
           </button>
         </div>
       </main>
+
+ {/* PREVIEW MODAL */}
+    <AnimatePresence>
+  {selectedDesign && (
+    <motion.div 
+      initial={{ opacity: 0 }} 
+      animate={{ opacity: 1 }} 
+      exit={{ opacity: 0 }}
+      className="fixed inset-0 bg-black/70 backdrop-blur-sm z-100 flex items-center justify-center p-4"
+      onClick={() => setSelectedDesign(null)}
+    >
+      <motion.div 
+        initial={{ scale: 0.9, y: 20 }} 
+        animate={{ scale: 1, y: 0 }} 
+        exit={{ scale: 0.9, y: 20 }}
+        className="bg-white p-6 md:p-8 rounded-[3rem] max-w-lg w-full relative shadow-2xl"
+        onClick={(e) => e.stopPropagation()}
+      >
+        {/* Close Button */}
+        <button 
+          onClick={() => setSelectedDesign(null)} 
+          className="absolute top-5 right-5 p-2 bg-slate-100 hover:bg-red-100 hover:text-red-600 transition-colors rounded-full z-10"
+        >
+          <X size={24} />
+        </button>
+
+        {/* Image Preview Container */}
+        {/* <div className="w-full aspect-square relative rounded-[2rem] overflow-hidden bg-slate-50 mb-6 border border-slate-100"> */}
+          {/* <Image 
+            src={selectedDesign.src} 
+            alt="Preview" 
+            fill 
+            className="object-contain p-6" 
+            unoptimized 
+          />
+        </div> */}
+
+        <div className="w-full aspect-square relative rounded-[2rem] overflow-hidden bg-slate-50 mb-6 border border-slate-100 flex items-center justify-center">
+  {/* ہم یہاں LogoCanvas کو دوبارہ کال کر رہے ہیں لیکن config کے ساتھ */}
+  <LogoCanvas 
+  ref={canvasRef}
+    config={{
+      ...logoConfig, // موجودہ سیٹنگز (color, text, font)
+      // یہاں ہم کچھ اضافی کنٹرول بھی دے سکتے ہیں اگر ضرورت ہو
+    }} 
+  />
+</div>
+
+        {/* Text & Info
+        <div className="text-center mb-8">
+          <h2 className="text-3xl font-black text-slate-900 tracking-tight">{selectedDesign.name}</h2>
+          <p className="text-slate-500 font-medium mt-1">Ready to customize or purchase</p>
+        </div> */}
+
+        {/* Action Buttons */}
+        <div className="flex flex-col sm:flex-row gap-4">
+
+          {/* Buy Button */}
+          <button 
+            className="flex-1 flex items-center justify-center gap-2 bg-linear-to-r from-[#FF6B00] to-[#E02424] text-white py-4 rounded-2xl font-bold hover:opacity-90 transition-all active:scale-95 shadow-lg shadow-orange-200"
+          >
+            <ShoppingCart size={18} />
+            Buy Now
+          </button>
+        </div>
+      </motion.div>
+    </motion.div>
+  )}
+</AnimatePresence>
+
     </div>
   );
 }

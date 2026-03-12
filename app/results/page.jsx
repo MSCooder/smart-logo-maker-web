@@ -16,7 +16,7 @@ const ResultsPage = () => {
     return Array.from({ length: count }, (_, index) => ({
       id: index + 1,
       name: `Design ${index + 1}`,
-      src: `/photo${index + 1}.jfif`,
+      src: `images/photo${index + 1}.jfif`,
       initials: formData?.name || "BRAND",
       themeColor: '#8b5e3c'
     }));
@@ -78,7 +78,7 @@ const ResultsPage = () => {
       initial={{ opacity: 0 }} 
       animate={{ opacity: 1 }} 
       exit={{ opacity: 0 }}
-      className="fixed inset-0 bg-black/70 backdrop-blur-sm z-[100] flex items-center justify-center p-4"
+      className="fixed inset-0 bg-black/70 backdrop-blur-sm z-100 flex items-center justify-center p-4"
       onClick={() => setSelectedDesign(null)}
     >
       <motion.div 
@@ -126,7 +126,7 @@ const ResultsPage = () => {
 
           {/* Buy Button */}
           <button 
-            className="flex-1 flex items-center justify-center gap-2 bg-gradient-to-r from-[#FF6B00] to-[#E02424] text-white py-4 rounded-2xl font-bold hover:opacity-90 transition-all active:scale-95 shadow-lg shadow-orange-200"
+            className="flex-1 flex items-center justify-center gap-2 bg-linear-to-r from-[#FF6B00] to-[#E02424] text-white py-4 rounded-2xl font-bold hover:opacity-90 transition-all active:scale-95 shadow-lg shadow-orange-200"
           >
             <ShoppingCart size={18} />
             Buy Now
