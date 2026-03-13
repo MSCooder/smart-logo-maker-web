@@ -27,30 +27,20 @@ export default function EditorPage() {
 
 function EditorUI() {
 
-  const canvasRef = useRef(null); // <--- Hooks فنکشن کے بالکل شروع میں ہوں
+ const [sidebarMode, setSidebarMode] = useState('variations');
+  const [layout, setLayout] = useState('vertical'); 
+  const [logoStyle, setLogoStyle] = useState('standard'); 
+  const [sidebarOpen, setSidebarOpen] = useState(false);
+
+  const canvasRef = useRef(null); 
   const router = useRouter();
   const [selectedDesign, setSelectedDesign] = useState(null);
-
-  const handleDownload = () => {
-    // یہاں ہم چیک کر رہے ہیں کہ کیا ref موجود ہے
-    if (canvasRef.current) {
-      const stage = canvasRef.current.getStage();
-      const dataURL = stage.toDataURL({ pixelRatio: 2, mimeType: 'image/png' });
-      const link = document.createElement('a');
-      link.download = 'logo.png';
-      link.href = dataURL;
-      link.click();
-    } else {
-      console.error("Canvas ref is null!"); // اگر بٹن کام نہ کرے تو یہاں دیکھیں
-    }
-  };
 
   // Preview Button Handler
   const handlePreviewClick = () => {
     setSelectedDesign({
       src: logoConfig.imageUrl,
       name: logoConfig.text,
-      // اگر آپ کو مزید ڈیٹا چاہیے تو یہاں ایڈ کریں
       initials: logoConfig.text,
       themeColor: logoConfig.bgColor
     });
@@ -86,7 +76,6 @@ function EditorUI() {
   }, [urlImage, urlName]);
 
   const [activeDropdown, setActiveDropdown] = useState(null);
-  const [sidebarOpen, setSidebarOpen] = useState(false);
   const [isLoading, setIsLoading] = useState(false);
 
   const fonts = ['Arial', 'Verdana', 'Georgia', 'Courier New', 'Impact', 'serif', 'mono'];
@@ -103,43 +92,110 @@ function EditorUI() {
     { id: 3, label: 'Soft' }, { id: 4, label: 'Minimal' },
   ];
 
+  const sidebarData = {
+    variations: variations, 
+    style: [
+      { id: 'glass', label: 'Glassmorphism' },
+      { id: 'neon', label: 'Neon Glow' },
+      { id: 'minimal', label: 'Minimalist' }
+    ],
+    layout: [
+      { id: 'vertical', label: 'Logo Top' },
+      { id: 'horizontal', label: 'Logo Left' },
+      { id: 'textOnly', label: 'Text Only' }
+    ]
+  };
+
+  const sidebarOptions = {
+    variations: [
+      { id: 'v1', label: 'Modern', color: '#E0F2FE' },
+      { id: 'v2', label: 'Clean', color: '#DCFCE7' },
+    ],
+    style: [
+      { id: 'glass', label: 'Glassmorphism' },
+      { id: 'neon', label: 'Neon Glow' },
+      { id: 'minimal', label: 'Minimalist' }
+    ],
+    layout: [
+      { id: 'vertical', label: 'Logo Top' },
+      { id: 'horizontal', label: 'Logo Left' },
+      { id: 'textOnly', label: 'Text Only' }
+    ]
+  };
+
+
+
+  const currentItems = sidebarData[sidebarMode] || variations;
+
   return (
     <div className="fixed inset-0 bg-[#f4f7fa] flex flex-col lg:flex-row overflow-hidden font-sans">
 
-      {/* SIDEBAR (Variations) */}
-      <div className={`fixed inset-0 z-200 lg:hidden transition-all duration-300 ${sidebarOpen ? "visible opacity-100" : "invisible opacity-0"}`}>
-        <div className="absolute inset-0 bg-black/40 backdrop-blur-sm" onClick={() => setSidebarOpen(false)} />
-        <aside className={`absolute inset-y-0 left-0 w-80 bg-white shadow-2xl transition-transform duration-300 ${sidebarOpen ? "translate-x-0" : "-translate-x-full"}`}>
-          <div className="p-6 border-b flex justify-between items-center">
-            <span className={`font-bold text-500 ${gradients.text}`}>VARIATIONS</span>
-            <X onClick={() => setSidebarOpen(false)} className="cursor-pointer text-gray-400" size={24} />
-          </div>
-          <div className="p-4 space-y-4 overflow-y-auto h-[calc(100vh-80px)]">
-            {variations.map((v) => (
-              <div key={v.id} onClick={() => { setLogoConfig({ ...logoConfig, bgColor: colors[v.id % colors.length].value }); setSidebarOpen(false); }}
-                className="bg-gray-50 border border-gray-100 rounded-2xl p-4 hover:border-orange-400 cursor-pointer">
-                <div className="w-full aspect-video rounded-xl flex items-center justify-center mb-2" style={{ backgroundColor: logoConfig.bgColor }}>
-                  <img src={logoConfig.imageUrl} className="w-12 h-12 object-contain" alt="preview" />
+
+      {/* SIDEBAR (Mobile & Desktop Dynamic) */}
+      <AnimatePresence>
+        {/* Mobile Sidebar */}
+        <div className={`fixed inset-0 z-200 lg:hidden transition-all duration-300 ${sidebarOpen ? "visible opacity-100" : "invisible opacity-0"}`}>
+          <div className="absolute inset-0 bg-black/40 backdrop-blur-sm" onClick={() => setSidebarOpen(false)} />
+          <aside className={`absolute inset-y-0 left-0 w-80 bg-white shadow-2xl transition-transform duration-300 ${sidebarOpen ? "translate-x-0" : "-translate-x-full"}`}>
+            <div className="p-6 border-b flex justify-between items-center">
+              <span className={`font-bold text-sm uppercase tracking-wider ${gradients.text}`}>VARIATIONS</span>
+              <X onClick={() => setSidebarOpen(false)} className="cursor-pointer text-gray-400" size={24} />
+            </div>
+            <div className="p-4 space-y-4 overflow-y-auto h-[calc(100vh-80px)]">
+              {sidebarOptions[sidebarMode].map((v) => (
+                <div key={v.id}
+                  onClick={() => {
+                    if (sidebarMode === 'variations') setLogoConfig({ ...logoConfig, bgColor: v.color });
+                    if (sidebarMode === 'layout') setLayout(v.id);
+                    if (sidebarMode === 'style') setLogoStyle(v.id);
+                    setSidebarOpen(false);
+                  }}
+                  className="bg-gray-50 border border-gray-100 rounded-2xl p-4 hover:border-orange-400 cursor-pointer">
+                  <div className="w-full aspect-video rounded-xl mb-2 bg-white shadow-sm overflow-hidden flex items-center justify-center relative">
+                    <div className="absolute inset-0 origin-center">
+                      <LogoCanvas
+                        config={logoConfig}
+                        layout={v.id === 'horizontal' ? 'horizontal' : 'vertical'}
+                        isPreview={true}
+                      />
+                    </div>
+                  </div>
+                  <p className="text-[10px] font-bold text-gray-500 uppercase mt-2">{v.label}</p>
                 </div>
-                <p className="text-xs font-bold text-gray-500 uppercase">{v.label}</p>
-              </div>
-            ))}
-          </div>
-        </aside>
-      </div>
+              ))}
+            </div>
+          </aside>
+        </div>
+      </AnimatePresence>
 
       {/* DESKTOP SIDEBAR */}
-      <aside className="hidden lg:flex w-72 bg-white border-r border-gray-100 flex-col shrink-0">
+      <aside className="hidden lg:flex w-90 bg-white border-r border-gray-100 flex-col shrink-0">
         <div className="p-8 border-b border-gray-50">
-          <h2 className={`text-xs font-black uppercase tracking-widest ${gradients.text}`}>Variations</h2>
+          <h2 className={`text-xs font-black uppercase tracking-widest ${gradients.text}`}>VARIATIONS</h2>
         </div>
-        <div className="flex-1 overflow-y-auto p-4 space-y-4 bg-gray-50/30">
-          {variations.map((v) => (
-            <div key={v.id} onClick={() => setLogoConfig({ ...logoConfig, bgColor: colors[v.id % colors.length].value })} className="bg-white border border-gray-100 rounded-2xl p-4 shadow-sm hover:border-orange-400 cursor-pointer transition-all">
-              <div className="w-full aspect-video rounded-xl mb-2 flex items-center justify-center" style={{ backgroundColor: logoConfig.bgColor }}>
-                <img src={logoConfig.imageUrl} alt="preview" className="w-12 h-12 object-contain" />
+        <div className="flex-1 overflow-y-auto p-4 space-y-2 bg-gray-50/30">
+          {sidebarOptions[sidebarMode].map((v) => (
+            <div key={v.id}
+              onClick={() => {
+                if (sidebarMode === 'variations') setLogoConfig({ ...logoConfig, bgColor: v.color });
+                if (sidebarMode === 'layout') setLayout(v.id);
+                if (sidebarMode === 'style') setLogoStyle(v.id);
+              }}
+              className="bg-white border border-gray-100 rounded-2xl p-2 shadow-sm hover:border-orange-400 cursor-pointer transition-all">
+              <div className="w-full aspect-video text-sm rounded-xl mb-2 bg-white shadow-sm overflow-hidden flex items-center justify-center relative">
+                <div className="w-full aspect-video rounded-xl mb-2 bg-white shadow-sm overflow-hidden flex items-center justify-center">
+                  <div className="w-full text-2xl h-full flex items-center justify-center pointer-events-none">
+                    <LogoCanvas
+                      config={logoConfig}
+                      layout={v.id === 'horizontal' ? 'horizontal' : 'vertical'}
+                      isPreview={true}
+                      width={400}  
+                      height={250}
+                    />
+                  </div>
+                </div>
               </div>
-              <span className="text-[10px] font-bold text-gray-400 uppercase">{v.label}</span>
+              <span className="text-[10px] font-bold text-gray-400 uppercase mt-2 block">{v.label}</span>
             </div>
           ))}
         </div>
@@ -156,22 +212,27 @@ function EditorUI() {
             </button>
           </div>
           <div className="flex items-center justify-center gap-2 md:gap-4">
-            <button className="flex-1 md:flex-none flex items-center justify-center gap-2 px-5 py-2 bg-white text-orange-600 rounded-full font-bold text-sm border border-orange-200">
+            <button
+              onClick={() => { setSidebarMode('style'); setSidebarOpen(true); }}
+              className=" hover:border-red hover:scale-105 active:scale-95 transition-all duration-300 shadow-sm flex-1 md:flex-none flex items-center justify-center gap-2 px-5 py-2 bg-white text-orange-600 rounded-full font-bold text-sm border border-orange-200">
               <ShoppingCart size={18} /> <span>Style</span>
-            </button><button className="flex-1 md:flex-none flex items-center justify-center gap-2 px-5 py-2 bg-white text-orange-600 rounded-full font-bold text-sm border border-orange-200">
+            </button>
+            <button
+              onClick={() => { setSidebarMode('layout'); setSidebarOpen(true); }}
+              className="hover:border-red hover:scale-105 active:scale-95 transition-all duration-300 shadow-sm flex-1 md:flex-none flex items-center justify-center gap-2 px-5 py-2 bg-white text-orange-600 rounded-full font-bold text-sm border border-orange-200">
               <ShoppingCart size={18} /> <span>Layout</span>
             </button>
             {/* Font Dropdown */}
             <div className="relative">
               <button onClick={() => setActiveDropdown(activeDropdown === 'font' ? null : 'font')}
-                className={`flex items-center gap-2 px-4 py-2.5 rounded-full text-white text-xs font-bold transition-all ${gradients.primary}`}>
+                className={`hover:border-red hover:scale-105 active:scale-95 duration-300 shadow-sm flex items-center gap-2 px-4 py-2.5 rounded-full text-white text-xs font-bold transition-all ${gradients.primary}`}>
                 <Type size={14} /> <span>Font</span> <ChevronDown size={12} />
               </button>
               {activeDropdown === 'font' && (
-                <div className="absolute top-full right-0 mt-2 w-48 bg-white shadow-2xl rounded-2xl z-110 border border-gray-100 p-2">
+                <div className="hover:border-red hover:scale-105 active:scale-95 transition-all duration-300 absolute top-full right-0 mt-2 w-48 bg-white shadow-2xl rounded-2xl z-110 bsorder border-gray-100 p-2">
                   {fonts.map(f => (
                     <button key={f} onClick={() => { setLogoConfig({ ...logoConfig, fontFamily: f }); setActiveDropdown(null); }}
-                      className="w-full text-left p-2.5 hover:bg-gray-50 rounded-xl text-sm" style={{ fontFamily: f }}>{f}</button>
+                      className=" w-full text-left p-2.5 hover:bg-gray-50 rounded-xl text-sm" style={{ fontFamily: f }}>{f}</button>
                   ))}
                 </div>
               )}
@@ -180,7 +241,7 @@ function EditorUI() {
             {/* Color Dropdown */}
             <div className="relative">
               <button onClick={() => setActiveDropdown(activeDropdown === 'color' ? null : 'color')}
-                className={`flex items-center gap-2 px-4 py-2.5 rounded-full text-white text-xs font-bold transition-all ${gradients.primary}`}>
+                className={`hover:border-red hover:scale-105 active:scale-95 transition-all duration-300 shadow-sm flex items-center gap-2 px-4 py-2.5 rounded-full text-white text-xs font-bold  ${gradients.primary}`}>
                 <Palette size={14} /> <span>Color</span> <ChevronDown size={12} />
               </button>
               {activeDropdown === 'color' && (
@@ -202,98 +263,85 @@ function EditorUI() {
 
         {/* CANVAS */}
         <div className="flex-1 flex items-center justify-center p-4 md:p-10 bg-[#f8fafc] overflow-hidden">
-          <LogoCanvas config={logoConfig} />
+
+          <LogoCanvas
+            config={logoConfig}
+            layout={layout}       
+            logoStyle={logoStyle} 
+          />
+
         </div>
 
         {/* BOTTOM NAV */}
         <div className="h-20 md:h-24 bg-white border-t border-gray-100 flex items-center justify-center gap-4 px-6 shrink-0 z-50">
-          <button 
-           onClick={handlePreviewClick}
-          className={`flex-1 md:flex-none flex items-center justify-center gap-2 px-10 py-3.5 rounded-full font-bold text-white text-sm shadow-xl transition-all ${gradients.primary}`}>
+          <button
+            onClick={handlePreviewClick}
+            className={`hover:border-red hover:scale-105 active:scale-95 transition-all duration-300  flex-1 md:flex-none flex items-center justify-center gap-2 px-10 py-3.5 rounded-full font-bold text-white text-sm shadow-xl ${gradients.primary}`}>
             <Save size={18} />
             <span>Preview</span>
           </button>
-          <button className={`flex-1 md:flex-none flex items-center justify-center gap-2 px-10 py-3.5 rounded-full font-bold text-white text-sm shadow-xl transition-all ${gradients.primary}`}>
+          <button className={`hover:border-red hover:scale-105 active:scale-95 duration-300 flex-1 md:flex-none flex items-center justify-center gap-2 px-10 py-3.5 rounded-full font-bold text-white text-sm shadow-xl transition-all ${gradients.primary}`}>
             <Save size={18} />
             <span>Save Design</span>
           </button>
 
           <button
-          onClick={handleDownload}
-          className="flex-1 md:flex-none flex items-center justify-center gap-2 px-8 py-3.5 bg-white text-orange-600 rounded-full font-bold text-sm border border-orange-200">
-            <ShoppingCart size={18} /> <span>Download</span>
+            className="hover:border-red hover:scale-105 active:scale-95 transition-all duration-300 shadow-sm flex-1 md:flex-none flex items-center justify-center gap-2 px-8 py-3.5 bg-white text-orange-600 rounded-full font-bold text-sm border border-orange-200">
+            <ShoppingCart size={18} /> <span>Buy Now</span>
           </button>
         </div>
       </main>
 
- {/* PREVIEW MODAL */}
-    <AnimatePresence>
-  {selectedDesign && (
-    <motion.div 
-      initial={{ opacity: 0 }} 
-      animate={{ opacity: 1 }} 
-      exit={{ opacity: 0 }}
-      className="fixed inset-0 bg-black/70 backdrop-blur-sm z-100 flex items-center justify-center p-4"
-      onClick={() => setSelectedDesign(null)}
-    >
-      <motion.div 
-        initial={{ scale: 0.9, y: 20 }} 
-        animate={{ scale: 1, y: 0 }} 
-        exit={{ scale: 0.9, y: 20 }}
-        className="bg-white p-6 md:p-8 rounded-[3rem] max-w-lg w-full relative shadow-2xl"
-        onClick={(e) => e.stopPropagation()}
-      >
-        {/* Close Button */}
-        <button 
-          onClick={() => setSelectedDesign(null)} 
-          className="absolute top-5 right-5 p-2 bg-slate-100 hover:bg-red-100 hover:text-red-600 transition-colors rounded-full z-10"
-        >
-          <X size={24} />
-        </button>
-
-        {/* Image Preview Container */}
-        {/* <div className="w-full aspect-square relative rounded-[2rem] overflow-hidden bg-slate-50 mb-6 border border-slate-100"> */}
-          {/* <Image 
-            src={selectedDesign.src} 
-            alt="Preview" 
-            fill 
-            className="object-contain p-6" 
-            unoptimized 
-          />
-        </div> */}
-
-        <div className="w-full aspect-square relative rounded-[2rem] overflow-hidden bg-slate-50 mb-6 border border-slate-100 flex items-center justify-center">
-  {/* ہم یہاں LogoCanvas کو دوبارہ کال کر رہے ہیں لیکن config کے ساتھ */}
-  <LogoCanvas 
-  ref={canvasRef}
-    config={{
-      ...logoConfig, // موجودہ سیٹنگز (color, text, font)
-      // یہاں ہم کچھ اضافی کنٹرول بھی دے سکتے ہیں اگر ضرورت ہو
-    }} 
-  />
-</div>
-
-        {/* Text & Info
-        <div className="text-center mb-8">
-          <h2 className="text-3xl font-black text-slate-900 tracking-tight">{selectedDesign.name}</h2>
-          <p className="text-slate-500 font-medium mt-1">Ready to customize or purchase</p>
-        </div> */}
-
-        {/* Action Buttons */}
-        <div className="flex flex-col sm:flex-row gap-4">
-
-          {/* Buy Button */}
-          <button 
-            className="flex-1 flex items-center justify-center gap-2 bg-linear-to-r from-[#FF6B00] to-[#E02424] text-white py-4 rounded-2xl font-bold hover:opacity-90 transition-all active:scale-95 shadow-lg shadow-orange-200"
+      {/* PREVIEW MODAL */}
+      <AnimatePresence>
+        {selectedDesign && (
+          <motion.div
+            initial={{ opacity: 0 }}
+            animate={{ opacity: 1 }}
+            exit={{ opacity: 0 }}
+            className="fixed inset-0 bg-black/70 backdrop-blur-sm z-100 flex items-center justify-center p-4"
+            onClick={() => setSelectedDesign(null)}
           >
-            <ShoppingCart size={18} />
-            Buy Now
-          </button>
-        </div>
-      </motion.div>
-    </motion.div>
-  )}
-</AnimatePresence>
+            <motion.div
+              initial={{ scale: 0.9, y: 20 }}
+              animate={{ scale: 1, y: 0 }}
+              exit={{ scale: 0.9, y: 20 }}
+              className="bg-white p-6 md:p-8 rounded-[3rem] max-w-lg w-full relative shadow-2xl"
+              onClick={(e) => e.stopPropagation()}
+            >
+              {/* Close Button */}
+              <button
+                onClick={() => setSelectedDesign(null)}
+                className="absolute top-5 right-5 p-2 bg-slate-100 hover:bg-red-100 hover:text-red-600 transition-colors rounded-full z-10"
+              >
+                <X size={24} />
+              </button>
+
+              <div className="w-full aspect-square relative rounded-[2rem] overflow-hidden bg-slate-50 mb-6 border border-slate-100 flex items-center justify-center">
+                <LogoCanvas
+                  ref={canvasRef}
+                  config={{
+                    ...logoConfig, 
+                   
+                  }}
+                />
+              </div>
+
+              {/* Action Buttons */}
+              <div className="flex flex-col sm:flex-row gap-4">
+
+                {/* Buy Button */}
+                <button
+                  className="flex-1 flex items-center justify-center gap-2 bg-linear-to-r from-[#FF6B00] to-[#E02424] text-white py-4 rounded-2xl font-bold hover:opacity-90 transition-all active:scale-95 shadow-lg shadow-orange-200"
+                >
+                  <ShoppingCart size={18} />
+                  Buy Now
+                </button>
+              </div>
+            </motion.div>
+          </motion.div>
+        )}
+      </AnimatePresence>
 
     </div>
   );
