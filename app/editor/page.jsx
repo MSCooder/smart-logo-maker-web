@@ -1,5 +1,5 @@
 "use client";
-import React, { useState, Suspense, useEffect, useRef } from 'react'; // ایک بار امپورٹ کریں
+import React, { useState, Suspense, useEffect, useRef } from 'react'; 
 import { useSearchParams } from 'next/navigation';
 import dynamic from 'next/dynamic';
 import { Palette, Type, Save, ShoppingCart, ChevronDown, Menu, X, Edit3 } from 'lucide-react';
@@ -130,56 +130,10 @@ function EditorUI() {
   return (
     <div className=" pt-20 fixed inset-0 bg-[#f4f7fa] flex flex-col lg:flex-row overflow-hidden font-sans">
 
-
-      {/* SIDEBAR (Mobile & Desktop Dynamic) */}
-      {/* <AnimatePresence> */}
-        {/* Mobile Sidebar */}
-        {/* <div className={`fixed inset-0 z-200 lg:hidden transition-all duration-300 ${sidebarOpen ? "visible opacity-100" : "invisible opacity-0"}`}>
-          <div className="absolute inset-0 bg-black/40 backdrop-blur-sm" onClick={() => setSidebarOpen(false)} />
-          <aside className={`absolute inset-y-0 left-0 w-80 bg-white shadow-2xl transition-transform duration-300 ${sidebarOpen ? "translate-x-0" : "-translate-x-full"}`}>
-            <div className="p-6 border-b flex justify-between items-center">
-              <span className={`font-bold text-3xl uppercase tracking-wider ${gradients.text}`}>VARIATIONS</span>
-              <X onClick={() => setSidebarOpen(false)} className="cursor-pointer text-gray-400" size={24} />
-            </div>
-            <div className="p-4 space-y-4 overflow-y-auto h-[calc(100vh-80px)]"> */}
-              {/* DESKTOP SIDEBAR */}
-              {/* {sidebarOptions[sidebarMode].map((v) => (
-                <div key={v.id}
-                  onClick={() => {
-                    if (sidebarMode === 'variations') setLogoConfig({ ...logoConfig, bgColor: v.color });
-                    if (sidebarMode === 'layout') setLayout(v.id);
-                    if (sidebarMode === 'style') setLogoStyle(v.id);
-                  }}
-                  className="bg-white border border-gray-100 rounded-2xl p-3 shadow-sm hover:border-orange-400 cursor-pointer transition-all group"
-                >
-                  <div className="w-full aspect-video rounded-xl bg-gray-50 overflow-hidden flex items-center justify-center relative border border-gray-50">
-                    
-                    <div className="absolute inset-0 flex items-center justify-center scale-[0.45] origin-center pointer-events-none">
-                      <LogoCanvas
-                        config={sidebarMode === 'variations' ? { ...logoConfig, bgColor: v.color } : logoConfig}
-                        layout={sidebarMode === 'layout' ? v.id : layout}
-                        logoStyle={sidebarMode === 'style' ? v.id : logoStyle}
-                        isPreview={true}
-                        width={500} // بیس سائز فکس رکھیں
-                        height={320}
-                      />
-                    </div>
-                  </div>
-                  <span className="text-[10px] font-bold text-gray-400 uppercase mt-2 block group-hover:text-orange-500 transition-colors">
-                    {v.label}
-                  </span>
-                </div>
-              ))}
-            </div>
-          </aside>
-        </div> */}
-      {/* </AnimatePresence> */}
-
       {/* SIDEBAR (Mobile & Tablet Dynamic) */}
 <AnimatePresence>
   {sidebarOpen && (
-    <div className="fixed inset-0 z-[200] lg:hidden">
-      {/* بیک گراؤنڈ اوورلے - اس پر کلک کرنے سے سائیڈبار بند ہو جائے گا */}
+    <div className="fixed inset-0 z-200 lg:hidden">
       <div 
         className="absolute inset-0 bg-black/40 backdrop-blur-sm" 
         onClick={() => setSidebarOpen(false)} 
@@ -190,7 +144,7 @@ function EditorUI() {
           <span className={`font-bold text-xl uppercase tracking-wider ${gradients.text}`}>
             {sidebarMode === 'layout' ? 'Select Layout' : sidebarMode === 'style' ? 'Select Style' : 'Variations'}
           </span>
-          {/* بند کرنے کا بٹن */}
+          
           <X onClick={() => setSidebarOpen(false)} className="cursor-pointer text-gray-400" size={24} />
         </div>
 
@@ -198,11 +152,11 @@ function EditorUI() {
           {sidebarOptions[sidebarMode].map((v) => (
             <div key={v.id}
               onClick={() => {
-                // ڈیزائن اپڈیٹ کریں
+             
                 if (sidebarMode === 'variations') setLogoConfig({ ...logoConfig, bgColor: v.color });
                 if (sidebarMode === 'layout') setLayout(v.id);
                 if (sidebarMode === 'style') setLogoStyle(v.id);
-                // سلیکشن کے بعد خود بخود سائیڈبار بند کر دیں
+                
                 setSidebarOpen(false);
               }}
               className="bg-white border border-gray-100 rounded-2xl p-3 shadow-sm hover:border-orange-400 cursor-pointer transition-all"
