@@ -3,11 +3,17 @@ import React, { useRef, useImperativeHandle, forwardRef } from 'react';
 import { Stage, Layer, Text, Image as KonvaImage } from 'react-konva';
 import useImage from 'use-image';
 
-const Canvas = forwardRef(({ config = {}, layout = 'vertical', logoStyle = 'standard', isPreview = false }, ref) => {
+
+const Canvas = forwardRef(({ 
+  config = {}, 
+  layout = 'vertical', 
+  logoStyle = 'standard', 
+  isPreview = false,
+  width = 500,  
+  height = 320  
+}, ref) => {
   const stageRef = useRef(null);
   const [img] = useImage(config.imageUrl || "");
-
-
 
   useImperativeHandle(ref, () => ({
     getStage: () => stageRef.current
@@ -46,14 +52,16 @@ const Canvas = forwardRef(({ config = {}, layout = 'vertical', logoStyle = 'stan
       <div className="shadow-2xl rounded-[2rem] overflow-hidden border border-gray-100">
         <Stage
           ref={stageRef}
-          width={canvasWidth}
-          height={canvasHeight}
-          className="w- h-80"
-          style={{ backgroundColor: config.bgColor || "#FFFFFF" }}
+          width={width} 
+          height={height}
+          scaleX={width / 500} 
+          scaleY={height / 320}
+          style={{
+            backgroundColor: config.bgColor || "#FFFFFF",
+            display: 'block'
+          }}
         >
           <Layer>
-
-
             {renderWatermarks()}
             {img && (
               <KonvaImage
@@ -82,6 +90,15 @@ const Canvas = forwardRef(({ config = {}, layout = 'vertical', logoStyle = 'stan
               fill="#1F2937"
               draggable={!isPreview}
             />
+
+            {logoStyle === 'glassmorphism' && (
+              <Rect
+                width={width}
+                height={height}
+                fill="rgba(255, 255, 255, 0.2)"
+                shadowBlur={10}
+              />
+            )}
 
           </Layer>
         </Stage>

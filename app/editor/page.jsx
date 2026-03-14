@@ -27,12 +27,12 @@ export default function EditorPage() {
 
 function EditorUI() {
 
- const [sidebarMode, setSidebarMode] = useState('variations');
-  const [layout, setLayout] = useState('vertical'); 
-  const [logoStyle, setLogoStyle] = useState('standard'); 
+  const [sidebarMode, setSidebarMode] = useState('variations');
+  const [layout, setLayout] = useState('vertical');
+  const [logoStyle, setLogoStyle] = useState('standard');
   const [sidebarOpen, setSidebarOpen] = useState(false);
 
-  const canvasRef = useRef(null); 
+  const canvasRef = useRef(null);
   const router = useRouter();
   const [selectedDesign, setSelectedDesign] = useState(null);
 
@@ -93,7 +93,7 @@ function EditorUI() {
   ];
 
   const sidebarData = {
-    variations: variations, 
+    variations: variations,
     style: [
       { id: 'glass', label: 'Glassmorphism' },
       { id: 'neon', label: 'Neon Glow' },
@@ -128,45 +128,107 @@ function EditorUI() {
   const currentItems = sidebarData[sidebarMode] || variations;
 
   return (
-    <div className="fixed inset-0 bg-[#f4f7fa] flex flex-col lg:flex-row overflow-hidden font-sans">
+    <div className=" pt-20 fixed inset-0 bg-[#f4f7fa] flex flex-col lg:flex-row overflow-hidden font-sans">
 
 
       {/* SIDEBAR (Mobile & Desktop Dynamic) */}
-      <AnimatePresence>
+      {/* <AnimatePresence> */}
         {/* Mobile Sidebar */}
-        <div className={`fixed inset-0 z-200 lg:hidden transition-all duration-300 ${sidebarOpen ? "visible opacity-100" : "invisible opacity-0"}`}>
+        {/* <div className={`fixed inset-0 z-200 lg:hidden transition-all duration-300 ${sidebarOpen ? "visible opacity-100" : "invisible opacity-0"}`}>
           <div className="absolute inset-0 bg-black/40 backdrop-blur-sm" onClick={() => setSidebarOpen(false)} />
           <aside className={`absolute inset-y-0 left-0 w-80 bg-white shadow-2xl transition-transform duration-300 ${sidebarOpen ? "translate-x-0" : "-translate-x-full"}`}>
             <div className="p-6 border-b flex justify-between items-center">
-              <span className={`font-bold text-sm uppercase tracking-wider ${gradients.text}`}>VARIATIONS</span>
+              <span className={`font-bold text-3xl uppercase tracking-wider ${gradients.text}`}>VARIATIONS</span>
               <X onClick={() => setSidebarOpen(false)} className="cursor-pointer text-gray-400" size={24} />
             </div>
-            <div className="p-4 space-y-4 overflow-y-auto h-[calc(100vh-80px)]">
-              {sidebarOptions[sidebarMode].map((v) => (
+            <div className="p-4 space-y-4 overflow-y-auto h-[calc(100vh-80px)]"> */}
+              {/* DESKTOP SIDEBAR */}
+              {/* {sidebarOptions[sidebarMode].map((v) => (
                 <div key={v.id}
                   onClick={() => {
                     if (sidebarMode === 'variations') setLogoConfig({ ...logoConfig, bgColor: v.color });
                     if (sidebarMode === 'layout') setLayout(v.id);
                     if (sidebarMode === 'style') setLogoStyle(v.id);
-                    setSidebarOpen(false);
                   }}
-                  className="bg-gray-50 border border-gray-100 rounded-2xl p-4 hover:border-orange-400 cursor-pointer">
-                  <div className="w-full aspect-video rounded-xl mb-2 bg-white shadow-sm overflow-hidden flex items-center justify-center relative">
-                    <div className="absolute inset-0 origin-center">
+                  className="bg-white border border-gray-100 rounded-2xl p-3 shadow-sm hover:border-orange-400 cursor-pointer transition-all group"
+                >
+                  <div className="w-full aspect-video rounded-xl bg-gray-50 overflow-hidden flex items-center justify-center relative border border-gray-50">
+                    
+                    <div className="absolute inset-0 flex items-center justify-center scale-[0.45] origin-center pointer-events-none">
                       <LogoCanvas
-                        config={logoConfig}
-                        layout={v.id === 'horizontal' ? 'horizontal' : 'vertical'}
+                        config={sidebarMode === 'variations' ? { ...logoConfig, bgColor: v.color } : logoConfig}
+                        layout={sidebarMode === 'layout' ? v.id : layout}
+                        logoStyle={sidebarMode === 'style' ? v.id : logoStyle}
                         isPreview={true}
+                        width={500} // بیس سائز فکس رکھیں
+                        height={320}
                       />
                     </div>
                   </div>
-                  <p className="text-[10px] font-bold text-gray-500 uppercase mt-2">{v.label}</p>
+                  <span className="text-[10px] font-bold text-gray-400 uppercase mt-2 block group-hover:text-orange-500 transition-colors">
+                    {v.label}
+                  </span>
                 </div>
               ))}
             </div>
           </aside>
+        </div> */}
+      {/* </AnimatePresence> */}
+
+      {/* SIDEBAR (Mobile & Tablet Dynamic) */}
+<AnimatePresence>
+  {sidebarOpen && (
+    <div className="fixed inset-0 z-[200] lg:hidden">
+      {/* بیک گراؤنڈ اوورلے - اس پر کلک کرنے سے سائیڈبار بند ہو جائے گا */}
+      <div 
+        className="absolute inset-0 bg-black/40 backdrop-blur-sm" 
+        onClick={() => setSidebarOpen(false)} 
+      />
+      
+      <aside className="absolute inset-y-0 left-0 w-80 bg-white shadow-2xl flex flex-col overflow-hidden animate-in slide-in-from-left duration-300">
+        <div className="p-6 border-b flex justify-between items-center bg-white">
+          <span className={`font-bold text-xl uppercase tracking-wider ${gradients.text}`}>
+            {sidebarMode === 'layout' ? 'Select Layout' : sidebarMode === 'style' ? 'Select Style' : 'Variations'}
+          </span>
+          {/* بند کرنے کا بٹن */}
+          <X onClick={() => setSidebarOpen(false)} className="cursor-pointer text-gray-400" size={24} />
         </div>
-      </AnimatePresence>
+
+        <div className="p-4 space-y-4 overflow-y-auto h-full bg-gray-50/30">
+          {sidebarOptions[sidebarMode].map((v) => (
+            <div key={v.id}
+              onClick={() => {
+                // ڈیزائن اپڈیٹ کریں
+                if (sidebarMode === 'variations') setLogoConfig({ ...logoConfig, bgColor: v.color });
+                if (sidebarMode === 'layout') setLayout(v.id);
+                if (sidebarMode === 'style') setLogoStyle(v.id);
+                // سلیکشن کے بعد خود بخود سائیڈبار بند کر دیں
+                setSidebarOpen(false);
+              }}
+              className="bg-white border border-gray-100 rounded-2xl p-3 shadow-sm hover:border-orange-400 cursor-pointer transition-all"
+            >
+              <div className="w-full aspect-video rounded-xl bg-gray-50 overflow-hidden flex items-center justify-center relative border border-gray-50">
+                <div className="absolute inset-0 flex items-center justify-center scale-[0.45] origin-center pointer-events-none">
+                  <LogoCanvas
+                    config={sidebarMode === 'variations' ? { ...logoConfig, bgColor: v.color } : logoConfig}
+                    layout={sidebarMode === 'layout' ? v.id : layout}
+                    logoStyle={sidebarMode === 'style' ? v.id : logoStyle}
+                    isPreview={true}
+                    width={500}
+                    height={320}
+                  />
+                </div>
+              </div>
+              <span className="text-[10px] font-bold text-gray-400 uppercase mt-2 block italic text-center">
+                {v.label}
+              </span>
+            </div>
+          ))}
+        </div>
+      </aside>
+    </div>
+  )}
+</AnimatePresence>
 
       {/* DESKTOP SIDEBAR */}
       <aside className="hidden lg:flex w-90 bg-white border-r border-gray-100 flex-col shrink-0">
@@ -174,6 +236,7 @@ function EditorUI() {
           <h2 className={`text-xs font-black uppercase tracking-widest ${gradients.text}`}>VARIATIONS</h2>
         </div>
         <div className="flex-1 overflow-y-auto p-4 space-y-2 bg-gray-50/30">
+          {/* DESKTOP SIDEBAR */}
           {sidebarOptions[sidebarMode].map((v) => (
             <div key={v.id}
               onClick={() => {
@@ -181,21 +244,23 @@ function EditorUI() {
                 if (sidebarMode === 'layout') setLayout(v.id);
                 if (sidebarMode === 'style') setLogoStyle(v.id);
               }}
-              className="bg-white border border-gray-100 rounded-2xl p-2 shadow-sm hover:border-orange-400 cursor-pointer transition-all">
-              <div className="w-full aspect-video text-sm rounded-xl mb-2 bg-white shadow-sm overflow-hidden flex items-center justify-center relative">
-                <div className="w-full aspect-video rounded-xl mb-2 bg-white shadow-sm overflow-hidden flex items-center justify-center">
-                  <div className="w-full text-2xl h-full flex items-center justify-center pointer-events-none">
-                    <LogoCanvas
-                      config={logoConfig}
-                      layout={v.id === 'horizontal' ? 'horizontal' : 'vertical'}
-                      isPreview={true}
-                      width={400}  
-                      height={250}
-                    />
-                  </div>
+              className="bg-white border border-gray-100 rounded-2xl p-3 shadow-sm hover:border-orange-400 cursor-pointer transition-all group"
+            >
+              <div className="w-full aspect-video rounded-xl bg-gray-50 overflow-hidden flex items-center justify-center relative border border-gray-50">
+                <div className="absolute inset-0 flex items-center justify-center scale-[0.45] origin-center pointer-events-none">
+                  <LogoCanvas
+                    config={sidebarMode === 'variations' ? { ...logoConfig, bgColor: v.color } : logoConfig}
+                    layout={sidebarMode === 'layout' ? v.id : layout}
+                    logoStyle={sidebarMode === 'style' ? v.id : logoStyle}
+                    isPreview={true}
+                    width={500} 
+                    height={320}
+                  />
                 </div>
               </div>
-              <span className="text-[10px] font-bold text-gray-400 uppercase mt-2 block">{v.label}</span>
+              <span className="text-[10px] font-bold text-gray-400 uppercase mt-2 block group-hover:text-orange-500 transition-colors">
+                {v.label}
+              </span>
             </div>
           ))}
         </div>
@@ -206,15 +271,10 @@ function EditorUI() {
 
         {/* TOPBAR */}
         <div className="h-16 md:h-20 bg-white border-b border-gray-100 flex items-center justify-center px-4 md:px-8 shrink-0 z-100">
-          <div className="flex items-center gap-3">
-            <button onClick={() => setSidebarOpen(true)} className="lg:hidden p-2.5 bg-gray-50 rounded-xl">
-              <Menu size={22} className="text-gray-600" />
-            </button>
-          </div>
           <div className="flex items-center justify-center gap-2 md:gap-4">
             <button
               onClick={() => { setSidebarMode('style'); setSidebarOpen(true); }}
-              className=" hover:border-red hover:scale-105 active:scale-95 transition-all duration-300 shadow-sm flex-1 md:flex-none flex items-center justify-center gap-2 px-5 py-2 bg-white text-orange-600 rounded-full font-bold text-sm border border-orange-200">
+              className=" hover:border-red hover:scale-105 active:scale-95 transition-all duration-300 shadow-sm flex-1 md:flex-none flex items-center justify-center gap-2 px-3 py-2 bg-white text-orange-600 rounded-full font-bold text-sm border border-orange-200">
               <ShoppingCart size={18} /> <span>Style</span>
             </button>
             <button
@@ -266,14 +326,14 @@ function EditorUI() {
 
           <LogoCanvas
             config={logoConfig}
-            layout={layout}       
-            logoStyle={logoStyle} 
+            layout={layout}
+            logoStyle={logoStyle}
           />
 
         </div>
 
         {/* BOTTOM NAV */}
-        <div className="h-20 md:h-24 bg-white border-t border-gray-100 flex items-center justify-center gap-4 px-6 shrink-0 z-50">
+        <div className="h-20 md:h-24 bg-white border-t border-gray-100 flex items-center justify-center gap-2 px-3 shrink-0 z-50">
           <button
             onClick={handlePreviewClick}
             className={`hover:border-red hover:scale-105 active:scale-95 transition-all duration-300  flex-1 md:flex-none flex items-center justify-center gap-2 px-10 py-3.5 rounded-full font-bold text-white text-sm shadow-xl ${gradients.primary}`}>
@@ -282,12 +342,12 @@ function EditorUI() {
           </button>
           <button className={`hover:border-red hover:scale-105 active:scale-95 duration-300 flex-1 md:flex-none flex items-center justify-center gap-2 px-10 py-3.5 rounded-full font-bold text-white text-sm shadow-xl transition-all ${gradients.primary}`}>
             <Save size={18} />
-            <span>Save Design</span>
+            <span>Save</span>
           </button>
 
           <button
             className="hover:border-red hover:scale-105 active:scale-95 transition-all duration-300 shadow-sm flex-1 md:flex-none flex items-center justify-center gap-2 px-8 py-3.5 bg-white text-orange-600 rounded-full font-bold text-sm border border-orange-200">
-            <ShoppingCart size={18} /> <span>Buy Now</span>
+            <ShoppingCart size={18} /> <span>Buy</span>
           </button>
         </div>
       </main>
@@ -299,7 +359,7 @@ function EditorUI() {
             initial={{ opacity: 0 }}
             animate={{ opacity: 1 }}
             exit={{ opacity: 0 }}
-            className="fixed inset-0 bg-black/70 backdrop-blur-sm z-100 flex items-center justify-center p-4"
+            className="mt-15 fixed inset-0 bg-black/70 backdrop-blur-sm z-100 flex items-center justify-center p-4"
             onClick={() => setSelectedDesign(null)}
           >
             <motion.div
@@ -321,8 +381,8 @@ function EditorUI() {
                 <LogoCanvas
                   ref={canvasRef}
                   config={{
-                    ...logoConfig, 
-                   
+                    ...logoConfig,
+
                   }}
                 />
               </div>

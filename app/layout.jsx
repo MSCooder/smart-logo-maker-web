@@ -2,7 +2,7 @@ import { Geist, Geist_Mono } from "next/font/google";
 import './globals.css';
 import ConditionalLayout from "../components/MainComponents/ConditionalLayout";
 import { Providers } from "./providers";
-import ClientPersistGate from "../components/ClientPersistGate"; // Nayi file
+import ClientPersistGate from "../components/ClientPersistGate"; 
 
 export const metadata = {
   title: "Smart Logo Maker"

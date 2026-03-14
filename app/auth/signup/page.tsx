@@ -23,7 +23,7 @@ export default async function Signup({ searchParams }: Props) {
 
         <div className="relative z-10 w-72 h-72">
           <Image
-            src="logos/logo3.svg"
+            src="logos/logo1.svg"
             alt="illustration"
             fill
             className="object-contain"
@@ -39,7 +39,7 @@ export default async function Signup({ searchParams }: Props) {
       <div className="w-full max-w-md bg-white/85 backdrop-blur-xl rounded-3xl shadow-[0_18px_55px_rgba(0,0,0,0.14)] px-6 py-5 z-10">
 
         <div className="flex justify-center mb-3">
-          <Image src="logos/logo3.svg" alt="Logo" width={68} height={68} priority />
+          <Image src="logos/logo1.svg" alt="Logo" width={68} height={68} priority />
         </div>
 
         <div className="text-center mb-3">

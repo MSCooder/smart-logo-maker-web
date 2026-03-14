@@ -17,7 +17,7 @@ export default async function Login({ searchParams }: Props) {
       {/* LEFT - LOGIN FORM */}
       <div className="w-full max-w-md bg-white/90 backdrop-blur-xl rounded-3xl shadow-lg px-8 py-8 md:mr-8 z-10">
         <div className="flex justify-center mb-5">
-          <Image src="logos/logo3.svg" alt="Logo" width={80} height={80} priority />
+          <Image src="logos\logo1.svg" alt="Logo" width={80} height={80} priority />
         </div>
 
         <div className="text-center mb-4">
@@ -125,7 +125,7 @@ export default async function Login({ searchParams }: Props) {
         {/* MAIN ROBOT IMAGE */}
         <div className="absolute top-0 left-30 w-195 h-195 pointer-events-none">
           <Image
-            src="logos/logo3.svg"
+            src="logos\logo1.svg"
             alt="light"
             fill
             className="object-contain"
