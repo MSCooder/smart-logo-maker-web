@@ -1,9 +1,11 @@
 "use client";
 import React, { useState, Suspense, useEffect } from 'react';
+import { useRouter } from 'next/navigation';
 import { useSearchParams } from 'next/navigation';
 import dynamic from 'next/dynamic';
 import { Palette, Type, Zap, Save, ShoppingCart, ChevronDown, Loader2, Menu, X } from 'lucide-react';
-import { useSelector } from 'react-redux'; // Redux check ke liye
+import { useDispatch, useSelector } from 'react-redux'; // Redux check ke liye
+import { updateEditedLogo } from '@/store/slices/logoSlice';
 
 const LogoCanvas = dynamic(() => import('../../components/Editor/Canvas'), {
   ssr: false,
@@ -24,12 +26,18 @@ export default function EditorPage() {
 }
 
 function EditorUI() {
+  const router = useRouter();
   const searchParams = useSearchParams();
+  const dispatch = useDispatch();
 
   // --- STEP 5: URL Handover Logic ---
   // Results page se bheja gaya data yahan receive ho raha hai
   const urlImage = searchParams.get('img');
   const urlName = searchParams.get('text');
+  const urlColor = searchParams.get('color');
+  const urlBg = searchParams.get('bg');
+  const urlFont = searchParams.get('font');
+  const urlIndex = searchParams.get('idx');
 
   // Redux se fallback data (agar URL mein na ho)
   const { formData } = useSelector((state) => state.logo);
@@ -37,25 +45,51 @@ function EditorUI() {
   const [logoConfig, setLogoConfig] = useState({
     imageUrl: urlImage || '/photo1.jfif', // Priority to URL
     text: urlName || formData.name || 'BRAND', // URL -> Redux -> Default
-    bgColor: '#FFFFFF',
-    fontFamily: 'Arial',
-    textColor: '#1A1A1A'
+    bgColor: urlBg || '#FFFFFF',
+    fontFamily: urlFont || 'Arial',
+    textColor: urlColor || '#1A1A1A'
   });
 
   // URL change hone par state update karna (Security/Sync)
   useEffect(() => {
-    if (urlImage || urlName) {
+    if (urlImage || urlName || urlColor || urlBg || urlFont) {
       setLogoConfig(prev => ({
         ...prev,
         imageUrl: urlImage || prev.imageUrl,
-        text: urlName || prev.text
+        text: urlName || prev.text,
+        bgColor: urlBg || prev.bgColor,
+        fontFamily: urlFont || prev.fontFamily,
+        textColor: urlColor || prev.textColor
       }));
     }
-  }, [urlImage, urlName]);
+  }, [urlImage, urlName, urlColor, urlBg, urlFont]);
 
   const [activeDropdown, setActiveDropdown] = useState(null);
   const [sidebarOpen, setSidebarOpen] = useState(false);
   const [isLoading, setIsLoading] = useState(false);
+  const [showPreview, setShowPreview] = useState(false);
+
+  const handleSaveDesign = () => {
+    const parsedIndex = Number(urlIndex);
+    if (Number.isNaN(parsedIndex)) {
+      router.push('/results');
+      return;
+    }
+
+    dispatch(
+      updateEditedLogo({
+        index: parsedIndex,
+        updates: {
+          editedText: logoConfig.text,
+          editedBgColor: logoConfig.bgColor,
+          editedTextColor: logoConfig.textColor,
+          editedFontFamily: logoConfig.fontFamily,
+        },
+      })
+    );
+
+    router.push('/results');
+  };
 
   const fonts = ['Arial', 'Verdana', 'Georgia', 'Courier New', 'Impact', 'serif', 'mono'];
   const colors = [
@@ -175,11 +209,17 @@ function EditorUI() {
 
         {/* BOTTOM NAV */}
         <div className="h-20 md:h-24 bg-white border-t border-gray-100 flex items-center justify-center gap-4 px-6 shrink-0 z-50">
-          <button className={`flex-1 md:flex-none flex items-center justify-center gap-2 px-10 py-3.5 rounded-full font-bold text-white text-sm shadow-xl transition-all ${gradients.primary}`}>
+          <button
+            onClick={() => setShowPreview(true)}
+            className={`flex-1 md:flex-none flex items-center justify-center gap-2 px-10 py-3.5 rounded-full font-bold text-white text-sm shadow-xl transition-all ${gradients.primary}`}
+          >
             <Save size={18} />
             <span>Preview</span>
           </button>
-          <button className={`flex-1 md:flex-none flex items-center justify-center gap-2 px-10 py-3.5 rounded-full font-bold text-white text-sm shadow-xl transition-all ${gradients.primary}`}>
+          <button
+            onClick={handleSaveDesign}
+            className={`flex-1 md:flex-none flex items-center justify-center gap-2 px-10 py-3.5 rounded-full font-bold text-white text-sm shadow-xl transition-all ${gradients.primary}`}
+          >
             <Save size={18} />
             <span>Save Design</span>
           </button>
@@ -188,6 +228,22 @@ function EditorUI() {
             <ShoppingCart size={18} /> <span>Download</span>
           </button>
         </div>
+
+        {showPreview && (
+          <div className="fixed inset-0 z-[300] bg-black/70 backdrop-blur-sm flex items-center justify-center p-4">
+            <div className="relative bg-white rounded-[2rem] shadow-2xl w-full max-w-4xl h-[80vh] p-4 md:p-6">
+              <button
+                onClick={() => setShowPreview(false)}
+                className="absolute top-4 right-4 p-2 rounded-full bg-slate-100 hover:bg-red-100 hover:text-red-600 transition-colors z-10"
+              >
+                <X size={20} />
+              </button>
+              <div className="w-full h-full bg-[#f8fafc] rounded-[1.5rem] overflow-hidden">
+                <LogoCanvas config={logoConfig} />
+              </div>
+            </div>
+          </div>
+        )}
       </main>
     </div>
   );
